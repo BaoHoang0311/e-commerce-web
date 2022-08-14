@@ -1,4 +1,5 @@
-﻿using e_commerce_web.Models;
+﻿
+using e_commerce_web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -17,12 +18,20 @@ namespace e_commerce_web.Controllers
         {
             _logger = logger;
         }
-
         public IActionResult Index()
         {
             return View();
         }
-
+        [Route("/About.html")]
+        public IActionResult About()
+        {
+            return View();
+        }
+        [Route("/contact.html")]
+        public IActionResult Contact()
+        {
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();
