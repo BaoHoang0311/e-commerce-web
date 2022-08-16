@@ -149,9 +149,6 @@ namespace e_commerce_web.Models
                     .HasMaxLength(12)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Salt)
-                    .HasMaxLength(8)
-                    .IsFixedLength(true);
             });
 
             modelBuilder.Entity<Location>(entity =>

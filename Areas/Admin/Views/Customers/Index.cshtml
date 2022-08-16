@@ -1,0 +1,121 @@
+﻿@model IEnumerable<e_commerce_web.Models.Customer>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<div class="page-header">
+    <h2 class="header-title">Customers List</h2>
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a href="/trang-admin" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+            <a class="breadcrumb-item" href="/Admin/Customers/Index">Customers</a>
+            <span class="breadcrumb-item active">Customers List</span>
+        </nav>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row m-b-30">
+            <div class="col-lg-8">
+                <div class="d-md-flex">
+                    <div class="m-b-10">
+                        <select class="custom-select" style="min-width: 180px;" id="status">
+                            <option label="Status"></option>
+                            <option value="Active">Active</option>
+                            <option value="Block">Block</option>
+                        </select>
+                    </div>
+                    <div class="m-b-10">
+                        <a class="btn btn-success" href="/Admin/Customers/Index">All</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 text-right">
+                <a class="btn btn-primary" href="/Admin/Customers/Create">
+                    <i class="anticon anticon-plus-circle m-r-5"></i>
+                    <span>Add Customer</span>
+                </a>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover e-commerce-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>FullName</th>
+                        <th>Address</th>
+                        <th>Active</th>
+                        <th>LastLogin</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cus in Model)
+                    {
+                        <tr>
+                            <td>
+                                @cus.CustomerId
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img class="img-fluid rounded" src="assets/images/others/thumb-9.jpg" style="max-width: 60px" alt="">
+                                    <h6 class="m-b-0 m-l-10">@cus.FullName</h6>
+                                </div>
+                            </td>
+                            <td>@cus.Address</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+
+                                    @if (cus.Active == true)
+                                    {
+                                        <div class="badge badge-success badge-dot m-r-10"></div>
+                                        <div>Active</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="badge badge-danger badge-dot m-r-10"></div>
+                                        <div>Block</div>
+                                    }
+                                </div>
+                            </td>
+                            <td>@cus.LastLogin</td>
+                            <td class="text-right">
+                                <a class="btn btn-icon btn-hover btn-sm btn-rounded"
+                                   href="/Admin/Customers/Details/@cus.CustomerId">
+                                    <i class="anticon anticon-info"></i>
+                                </a>
+                                <a class="btn btn-icon btn-hover btn-sm btn-rounded pull-right"
+                                   href="/Admin/Customers/Edit/@cus.CustomerId">
+                                    <i class="anticon anticon-edit"></i>
+                                </a>
+                                <a class="btn btn-icon btn-hover btn-sm btn-rounded"
+                                   href="/Admin/Customers/Delete/@cus.CustomerId">
+                                    <i class="anticon anticon-delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

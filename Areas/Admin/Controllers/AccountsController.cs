@@ -18,11 +18,32 @@ namespace e_commerce_web.Areas.Admin.Controllers
         {
             _context = context;
         }
-
-        // GET: Admin/Accounts
-        public async Task<IActionResult> Index()
+        public IActionResult Filter(int? roleID, string Status)
         {
-            var dbMarketsContext = _context.Accounts.Include(a => a.Role);
+            var url = $"/Admin/Accounts/Index?roleID={roleID}&status={Status}";
+            var zzz = Json(new { status = "success", redirectUrl = url });
+            return zzz;
+        }
+        // GET: Admin/Accounts
+        public async Task<IActionResult> Index(int? roleID, string Status)
+        {
+            ViewData["RoleName"] = new SelectList(_context.Roles.Where(x => x.RoleId == 1 || x.RoleId == 2), "RoleId", "Description");
+            
+            IQueryable<Account> dbMarketsContext = _context.Accounts.Include(a => a.Role);
+            
+            if(roleID != null && roleID != 0)
+            {
+                dbMarketsContext = dbMarketsContext.Where(x => x.RoleId == roleID);
+            }
+            if(Status == "Active")
+            {
+                dbMarketsContext = dbMarketsContext.Where(x => x.Active == true);
+            }
+            if(Status == "Block")
+            {
+                dbMarketsContext = dbMarketsContext.Where(x => x.Active == false );
+            }
+
             return View(await dbMarketsContext.ToListAsync());
         }
 
@@ -48,7 +69,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
         // GET: Admin/Accounts/Create
         public IActionResult Create()
         {
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "Description");
+            ViewData["RoleName"] = new SelectList(_context.Roles.Where(x => x.RoleId == 1 || x.RoleId == 2), "RoleId", "Description");
             return View();
         }
 
@@ -66,7 +87,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleName", "Description", account.RoleId);
+            ViewData["RoleName"] = new SelectList(_context.Roles.Where(x=> x.RoleId==1 || x.RoleId == 2) , "RoleName", "Description", account.RoleId);
             return View(account);
         }
 
@@ -83,7 +104,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "Description", account.RoleId);
+            ViewData["RoleName"] = new SelectList(_context.Roles, "RoleId", "Description", account.RoleId);
             return View(account);
         }
 
@@ -119,7 +140,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleId", account.RoleId);
+            ViewData["RoleName"] = new SelectList(_context.Roles, "RoleId", "RoleId", account.RoleId);
             return View(account);
         }
 
