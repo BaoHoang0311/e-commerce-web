@@ -18,13 +18,26 @@ namespace e_commerce_web.Areas.Admin.Controllers
         {
             _context = context;
         }
-
-        // GET: Admin/Customers
-        public async Task<IActionResult> Index()
+        [HttpPost]
+        public IActionResult AutoComplete(string prefix)
         {
-            return View(await _context.Customers.ToListAsync());
-        }
+            var cus = (from customer in _context.Customers
+                       where customer.FullName.StartsWith(prefix)
+                       select new
+                       {
+                           label = customer.FullName,
+                           val = customer.CustomerId,
+                           avatar =customer.Avatar
+                       }).Take(5).ToList();
 
+            return Json(cus);
+        }
+        public async Task<IActionResult> Index([Bind("keySearch")]string keySearch)
+        {
+            IQueryable<Customer> lsCus = _context.Customers;
+            if (keySearch != null) lsCus = lsCus.Where(p => p.FullName.Contains(keySearch));
+            return View(await lsCus.ToListAsync());
+        }
         // GET: Admin/Customers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -46,8 +59,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
         // GET: Admin/Customers/Create
         public IActionResult Create()
         {
-            var zzz = _context.Locations;
-            ViewBag.Location = new SelectList(_context.Locations, "LocationId", "NameWithType") ;
+            ViewBag.Location = new SelectList(_context.Locations, "LocationId", "NameWithType");
             return View();
         }
 
@@ -78,7 +90,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
             }
 
             var customer = await _context.Customers.FindAsync(id);
-            ViewBag.Location = new SelectList(_context.Locations, "LocationId", "NameWithType",customer.LocationId);
+            ViewBag.Location = new SelectList(_context.Locations, "LocationId", "NameWithType", customer.LocationId);
             if (customer == null)
             {
                 return NotFound();
@@ -97,7 +109,6 @@ namespace e_commerce_web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
                 try

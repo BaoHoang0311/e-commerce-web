@@ -5,7 +5,6 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-
 <div class="page-header">
     <h2 class="header-title">Customers List</h2>
     <div class="header-sub-title">
@@ -16,6 +15,14 @@
         </nav>
     </div>
 </div>
+
+<form method="Post" asp-controller="Customers" asp-area="Admin" asp-action="Index">
+    <label>Find by Name</label>
+    <input type="text" id="textPerson" name="keySearch" style="width:300px" />
+    <br />
+    <input type="submit" id="btnSubmit" value="Submit" />
+    <br />
+</form>
 
 <div class="card">
     <div class="card-body">
@@ -105,7 +112,49 @@
     </div>
 </div>
 
+@section Scripts_Admin {
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY="
+            crossorigin="anonymous"></script>
 
+    <script>
+        $(document).ready(function () {
+            $("#textPerson").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/Admin/Customers/AutoComplete/',
+                        data:
+                        {
+                            "prefix": request.term
+                        },
+                        type: "Post",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return item;
+                            }))
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        },
+                        failure: function (response) {
+                            alert(response.responseText);
+                        }
+                    });
+                },
+                minLength: 1,
+                classes: {
+                    "ui-autocomplete": "highlight"
+                },
+            }).data("ui-autocomplete")._renderItem = function (ul, item) {
+                var inner_html = '<div><img src="' + item.avatar + '" style="width:100px;height:100px"><span>' + item.label +'</span></div>';
+                return $("<li></li>")
+                    .data("ui-autocomplete-item", item)
+                    .append(inner_html)
+                    .appendTo(ul);
+            };
+        });
+    </script>
+}
 
 
 
