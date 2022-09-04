@@ -1,13 +1,20 @@
 ﻿@model e_commerce_web.Models.Customer
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Customers";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Edit</h1>
-
-<h4>Customer</h4>
+<div class="page-header">
+    <h2 class="header-title">Edit Customers</h2>
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a href="/trang-admin" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+            <a class="breadcrumb-item" href="/Admin/Customers/Index">Customers</a>
+            <span class="breadcrumb-item active">Edit Customers</span>
+        </nav>
+    </div>
+</div>
 <hr />
 <div class="row">
     <div class="col-md-4">

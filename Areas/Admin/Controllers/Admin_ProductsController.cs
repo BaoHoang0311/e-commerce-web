@@ -11,44 +11,44 @@ using PagedList.Core;
 namespace e_commerce_web.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class CustomersController : Controller
+    public class Admin_ProductsController : Controller
     {
         private readonly dbMarketsContext _context;
 
-        public CustomersController(dbMarketsContext context)
+        public Admin_ProductsController(dbMarketsContext context)
         {
             _context = context;
         }
         [HttpPost]
         public IActionResult AutoComplete(string prefix)
         {
-            var cus = (from customer in _context.Customers
-                       where customer.FullName.Contains(prefix) 
-                       orderby  customer.CreateDate descending
+            var pro = (from product in _context.Products
+                       where product.ProductName.Contains(prefix)
+                       orderby product.DateCreated descending
                        select new
                        {
-                           label = customer.FullName,
-                           val = customer.CustomerId,
-                           avatar =customer.Avatar
+                           label = product.ProductName,
+                           avatar = product.Thumb,
                        }).Take(5).ToList();
-            return Json(cus);
+            return Json(pro);
         }
-        //[Route("/abc")] // Ok
+        // GET: Admin/Admin_Products
         public IActionResult Index([Bind("keySearch")] string keySearch, int? page)
         {
-            IQueryable<Customer> lsCus =  _context.Customers;
-            if (keySearch != null) lsCus = lsCus.Where(p => p.FullName.Contains(keySearch));
+            IQueryable<Product> lsCus = _context.Products;
+            if (keySearch != null) lsCus = lsCus.Where(p => p.ProductName.Contains(keySearch));
 
             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
-            var pageSize = 1;
+            var pageSize = 20;
 
-            PagedList<Customer> models = new PagedList<Customer>(lsCus.OrderByDescending(x=>x.CreateDate).AsQueryable(), pageNumber, pageSize);
+            PagedList<Product> models = new PagedList<Product>(lsCus.OrderByDescending(x => x.DateCreated).AsQueryable(), pageNumber, pageSize);
 
             ViewBag.KKK = keySearch;
 
             return View(models);
         }
-        // GET: Admin/Customers/Details/5
+
+        // GET: Admin/Admin_Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -56,42 +56,42 @@ namespace e_commerce_web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers.Include(m=> m.Location)
-                .FirstOrDefaultAsync(m => m.CustomerId == id);
-            if (customer == null)
+            var product = await _context.Products
+                .Include(p => p.Cat)
+                .FirstOrDefaultAsync(m => m.ProductId == id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return View(customer);
+            return View(product);
         }
 
-        // GET: Admin/Customers/Create
+        // GET: Admin/Admin_Products/Create
         public IActionResult Create()
         {
-            ViewBag.Location = new SelectList(_context.Locations, "LocationId", "NameWithType");
+            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatId");
             return View();
         }
 
-        // POST: Admin/Customers/Create
+        // POST: Admin/Admin_Products/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustomerId,FullName,Birthday,Avatar,Address,Email,Phone,LocationId,District,Ward," +
-            "Password,LastLogin,Active")] Customer customer)
+        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,Video,DateCreated,DateModified,BestSellers,HomeFlag,Active,Tags,Title,Alias,MetaDesc,MetaKey,UnitsInStock")] Product product)
         {
             if (ModelState.IsValid)
             {
-                customer.CreateDate = DateTime.Now;
-                _context.Add(customer);
+                _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(customer);
+            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatId", product.CatId);
+            return View(product);
         }
 
-        // GET: Admin/Customers/Edit/5
+        // GET: Admin/Admin_Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -99,36 +99,37 @@ namespace e_commerce_web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers.FindAsync(id);
-            ViewBag.Location = new SelectList(_context.Locations, "LocationId", "NameWithType", customer.LocationId);
-            if (customer == null)
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
             {
                 return NotFound();
             }
-            return View(customer);
+            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatId", product.CatId);
+            return View(product);
         }
 
-        // POST: Admin/Customers/Edit/5
+        // POST: Admin/Admin_Products/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CustomerId,FullName,Birthday,Avatar,Address,Email,Phone,LocationId,District,Ward,CreateDate,Password,LastLogin,Active")] Customer customer)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,Video,DateCreated,DateModified,BestSellers,HomeFlag,Active,Tags,Title,Alias,MetaDesc,MetaKey,UnitsInStock")] Product product)
         {
-            if (id != customer.CustomerId)
+            if (id != product.ProductId)
             {
                 return NotFound();
             }
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(customer);
+                    _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CustomerExists(customer.CustomerId))
+                    if (!ProductExists(product.ProductId))
                     {
                         return NotFound();
                     }
@@ -139,10 +140,11 @@ namespace e_commerce_web.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(customer);
+            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatId", product.CatId);
+            return View(product);
         }
 
-        // GET: Admin/Customers/Delete/5
+        // GET: Admin/Admin_Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -150,29 +152,31 @@ namespace e_commerce_web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers.Include(m => m.Location)
-                .FirstOrDefaultAsync(m => m.CustomerId == id);
-            if (customer == null)
+            var product = await _context.Products
+                .Include(p => p.Cat)
+                .FirstOrDefaultAsync(m => m.ProductId == id);
+            if (product == null)
             {
                 return NotFound();
             }
-            return View(customer);
+
+            return View(product);
         }
 
-        // POST: Admin/Customers/Delete/5
+        // POST: Admin/Admin_Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
-            _context.Customers.Remove(customer);
+            var product = await _context.Products.FindAsync(id);
+            _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CustomerExists(int id)
+        private bool ProductExists(int id)
         {
-            return _context.Customers.Any(e => e.CustomerId == id);
+            return _context.Products.Any(e => e.ProductId == id);
         }
     }
 }

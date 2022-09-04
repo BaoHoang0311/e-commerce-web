@@ -30,12 +30,14 @@ namespace e_commerce_web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // connectionString
             var builder = new SqlConnectionStringBuilder(
-            Configuration.GetConnectionString("DefaulConnectionString"));
+                    Configuration.GetConnectionString("DefaulConnectionString"));
             builder.Password = Configuration["DbPassword"];
             _connection = builder.ConnectionString;
-            services.AddDbContext<dbMarketsContext>();
+            // connectionString
+            services.AddDbContext<dbMarketsContext>(options =>
+                options.UseSqlServer(_connection));
+
             services.AddMemoryCache();
             services.AddSession();
             services.AddScoped<Saveimage>();

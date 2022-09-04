@@ -35,10 +35,6 @@ namespace e_commerce_web.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Data Source=localhost,1433; Initial Catalog = dbMarkets; User ID = sa; Password = CASter789");
-            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -110,15 +106,7 @@ namespace e_commerce_web.Models
 
                 entity.Property(e => e.Cover).HasMaxLength(255);
 
-                entity.Property(e => e.MetaDesc).HasMaxLength(250);
-
-                entity.Property(e => e.MetaKey).HasMaxLength(250);
-
-                entity.Property(e => e.ParentId).HasColumnName("ParentID");
-
                 entity.Property(e => e.Thumb).HasMaxLength(250);
-
-                entity.Property(e => e.Title).HasMaxLength(250);
             });
 
             modelBuilder.Entity<Customer>(entity =>
@@ -133,9 +121,7 @@ namespace e_commerce_web.Models
 
                 entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
-                entity.Property(e => e.Email)
-                    .HasMaxLength(150)
-                    .IsFixedLength(true);
+                entity.Property(e => e.Email).HasMaxLength(255);
 
                 entity.Property(e => e.FullName).HasMaxLength(255);
 
@@ -149,13 +135,16 @@ namespace e_commerce_web.Models
                     .HasMaxLength(12)
                     .IsUnicode(false);
 
+                entity.HasOne(d => d.Location)
+                    .WithMany(p => p.Customers)
+                    .HasForeignKey(d => d.LocationId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_Customers_Locations");
             });
 
             modelBuilder.Entity<Location>(entity =>
             {
-                entity.Property(e => e.LocationId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("LocationID");
+                entity.Property(e => e.LocationId).HasColumnName("LocationID");
 
                 entity.Property(e => e.Name).HasMaxLength(50);
 
@@ -228,10 +217,6 @@ namespace e_commerce_web.Models
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
-                entity.Property(e => e.MetaDesc).HasMaxLength(250);
-
-                entity.Property(e => e.MetaKey).HasMaxLength(250);
-
                 entity.Property(e => e.PageName).HasMaxLength(250);
 
                 entity.Property(e => e.Thumb).HasMaxLength(250);
@@ -251,10 +236,6 @@ namespace e_commerce_web.Models
 
                 entity.Property(e => e.DateModified).HasColumnType("datetime");
 
-                entity.Property(e => e.MetaDesc).HasMaxLength(255);
-
-                entity.Property(e => e.MetaKey).HasMaxLength(255);
-
                 entity.Property(e => e.ProductName)
                     .IsRequired()
                     .HasMaxLength(255);
@@ -262,10 +243,6 @@ namespace e_commerce_web.Models
                 entity.Property(e => e.ShortDesc).HasMaxLength(255);
 
                 entity.Property(e => e.Thumb).HasMaxLength(255);
-
-                entity.Property(e => e.Title).HasMaxLength(255);
-
-                entity.Property(e => e.Video).HasMaxLength(255);
 
                 entity.HasOne(d => d.Cat)
                     .WithMany(p => p.Products)
@@ -337,10 +314,6 @@ namespace e_commerce_web.Models
                 entity.Property(e => e.IsHot).HasColumnName("isHot");
 
                 entity.Property(e => e.IsNewfeed).HasColumnName("isNewfeed");
-
-                entity.Property(e => e.MetaDesc).HasMaxLength(255);
-
-                entity.Property(e => e.MetaKey).HasMaxLength(255);
 
                 entity.Property(e => e.Scontents)
                     .HasMaxLength(255)

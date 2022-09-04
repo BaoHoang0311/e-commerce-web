@@ -37,7 +37,8 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Data\Extension\" />
-    <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\Categories\images\" />
+    <Folder Include="wwwroot\Customers\images\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -25,8 +25,6 @@ namespace e_commerce_web.Models
         public string Note { get; set; }
         public string Address { get; set; }
         public int? LocationId { get; set; }
-        public int? District { get; set; }
-        public int? Ward { get; set; }
 
         public virtual Customer Customer { get; set; }
         public virtual TransactStatus TransactStatus { get; set; }

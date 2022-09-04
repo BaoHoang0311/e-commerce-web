@@ -1,18 +1,18 @@
 ﻿@using PagedList.Core.Mvc;
-@model PagedList.Core.IPagedList<e_commerce_web.Models.Customer>
+@model PagedList.Core.IPagedList<e_commerce_web.Models.Category>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Danh Mục Sản Phẩm";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Danh sách khách hàng</h1>
+<h1>Danh sách danh mục sản phẩm</h1>
 
 <div class="card">
     <div class="card-body">
         <div class="row m-b-30">
             <div class="col-lg-8">
-                <form method="Post" asp-controller="Customers" asp-area="Admin" asp-action="Index">
+                <form method="Post" asp-controller="Admin_Categories" asp-area="Admin" asp-action="Index">
                     <label>Find by Name</label>
                     <input type="text" id="textPerson" name="keySearch" style="width:300px" />
                     <br />
@@ -21,9 +21,9 @@
                 </form>
             </div>
             <div class="col-lg-4 text-right">
-                <a class="btn btn-primary" asp-controller="Customers" asp-area="Admin" asp-action="Create">
+                <a class="btn btn-primary" asp-controller="Admin_Categories" asp-area="Admin" asp-action="Create">
                     <i class="anticon anticon-plus-circle m-r-5"></i>
-                    <span>Add Customer</span>
+                    <span>Add Categories</span>
                 </a>
             </div>
         </div>
@@ -32,54 +32,35 @@
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Cover</th>
                         <th>FullName</th>
-                        <th>Email</th>
-                        <th>Active</th>
-                        <th>LastLogin</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var cus in Model)
+                    @foreach (var cat in Model)
                     {
                         <tr>
                             <td>
-                                @cus.CustomerId
+                                @cat.CatId
                             </td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <img class="img-fluid rounded" src="assets/images/others/thumb-9.jpg" style="max-width: 60px" alt="">
-                                    <h6 class="m-b-0 m-l-10">@cus.FullName</h6>
+                                    <img class="img-fluid rounded" src="@cat.Cover" style="max-width: 60px" alt="">
                                 </div>
                             </td>
-                            <td>@cus.Email</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-
-                                    @if (cus.Active == true)
-                                    {
-                                        <div class="badge badge-success badge-dot m-r-10"></div>
-                                        <div>Active</div>
-                                    }
-                                    else
-                                    {
-                                        <div class="badge badge-danger badge-dot m-r-10"></div>
-                                        <div>Block</div>
-                                    }
-                                </div>
-                            </td>
-                            <td>@cus.LastLogin</td>
+                            <td>@cat.CatName</td>
                             <td class="text-right">
                                 <a class="btn btn-icon btn-hover btn-sm btn-rounded"
-                                   asp-controller="Customers" asp-area="Admin" asp-action="Details" asp-route-id="@cus.CustomerId">
+                                   asp-controller="Admin_Categories" asp-area="Admin" asp-action="Details" asp-route-id="@cat.CatId">
                                     <i class="anticon anticon-info"></i>
                                 </a>
                                 <a class="btn btn-icon btn-hover btn-sm btn-rounded pull-right"
-                                   asp-controller="Customers" asp-area="Admin" asp-action="Edit" asp-route-id="@cus.CustomerId">
+                                 asp-controller="Admin_Categories" asp-area="Admin" asp-action="Edit" asp-route-id="@cat.CatId">
                                     <i class="anticon anticon-edit"></i>
                                 </a>
                                 <a class="btn btn-icon btn-hover btn-sm btn-rounded"
-                                   asp-controller="Customers" asp-area="Admin" asp-action="Delete" asp-route-id="@cus.CustomerId" >
+                                   asp-controller="Admin_Categories" asp-area="Admin" asp-action="Delete" asp-route-id="@cat.CatId">
                                     <i class="anticon anticon-delete"></i>
                                 </a>
                             </td>
@@ -91,24 +72,25 @@
                 <ul class="pagination">
                     <pager class="pager-container" list="@Model"
                            options="@PagedListRenderOptions.Bootstrap4PageNumbersPlusPrevAndNext" asp-action="Index"
-                           asp-controller="Customers" asp-route-keySearch="@ViewBag.KKK" asp-route-page="@ViewBag.CurrentPage" />
+                           asp-controller="Admin_Categories" asp-route-keySearch="@ViewBag.KKK" asp-route-page="@ViewBag.CurrentPage" />
                 </ul>
             </div>
         </div>
     </div>
 </div>
 
+
+
 @section Scripts_Admin {
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
-    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
-            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" crossorigin="anonymous"></script>
 
     <script>
         $(document).ready(function () {
             $("#textPerson").autocomplete({
                 source: function (request, response) {
                     $.ajax({
-                        url: '/Admin/Customers/AutoComplete/',
+                        url: '/Admin/Admin_Categories/AutoComplete/',
                         data:
                         {
                             "prefix": request.term
@@ -141,15 +123,3 @@
         });
     </script>
 }
-
-
-
-
-
-
-
-
-
-
-
-
