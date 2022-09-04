@@ -1,0 +1,125 @@
+﻿@using PagedList.Core.Mvc;
+@model PagedList.Core.IPagedList<e_commerce_web.Models.Category>
+
+@{
+    ViewData["Title"] = "Danh Mục Sản Phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Danh sách danh mục sản phẩm</h1>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row m-b-30">
+            <div class="col-lg-8">
+                <form method="Post" asp-controller="Admin_Categories" asp-area="Admin" asp-action="Index">
+                    <label>Find by Name</label>
+                    <input type="text" id="textPerson" name="keySearch" style="width:300px" />
+                    <br />
+                    <input type="submit" id="btnSubmit" value="Submit" />
+                    <br />
+                </form>
+            </div>
+            <div class="col-lg-4 text-right">
+                <a class="btn btn-primary" asp-controller="Admin_Categories" asp-area="Admin" asp-action="Create">
+                    <i class="anticon anticon-plus-circle m-r-5"></i>
+                    <span>Add Categories</span>
+                </a>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover e-commerce-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cover</th>
+                        <th>FullName</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cat in Model)
+                    {
+                        <tr>
+                            <td>
+                                @cat.CatId
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img class="img-fluid rounded" src="@cat.Cover" style="max-width: 60px" alt="">
+                                </div>
+                            </td>
+                            <td>@cat.CatName</td>
+                            <td class="text-right">
+                                <a class="btn btn-icon btn-hover btn-sm btn-rounded"
+                                   asp-controller="Admin_Categories" asp-area="Admin" asp-action="Details" asp-route-id="@cat.CatId">
+                                    <i class="anticon anticon-info"></i>
+                                </a>
+                                <a class="btn btn-icon btn-hover btn-sm btn-rounded pull-right"
+                                 asp-controller="Admin_Categories" asp-area="Admin" asp-action="Edit" asp-route-id="@cat.CatId">
+                                    <i class="anticon anticon-edit"></i>
+                                </a>
+                                <a class="btn btn-icon btn-hover btn-sm btn-rounded"
+                                   asp-controller="Admin_Categories" asp-area="Admin" asp-action="Delete" asp-route-id="@cat.CatId">
+                                    <i class="anticon anticon-delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div aria-label="Page navigation example">
+                <ul class="pagination">
+                    <pager class="pager-container" list="@Model"
+                           options="@PagedListRenderOptions.Bootstrap4PageNumbersPlusPrevAndNext" asp-action="Index"
+                           asp-controller="Admin_Categories" asp-route-keySearch="@ViewBag.KKK" asp-route-page="@ViewBag.CurrentPage" />
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts_Admin {
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#textPerson").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/Admin/Admin_Categories/AutoComplete/',
+                        data:
+                        {
+                            "prefix": request.term
+                        },
+                        type: "Post",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return item;
+                            }))
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        },
+                        failure: function (response) {
+                            alert(response.responseText);
+                        }
+                    });
+                },
+                minLength: 1,
+                classes: {
+                    "ui-autocomplete": "highlight"
+                },
+            }).data("ui-autocomplete")._renderItem = function (ul, item) {
+                var inner_html = '<div><img src="' + item.avatar + '" style="width:100px;height:100px"><span>' + item.label + '</span></div>';
+                return $("<li></li>")
+                    .data("ui-autocomplete-item", item)
+                    .append(inner_html)
+                    .appendTo(ul);
+            };
+        });
+    </script>
+}

@@ -1,0 +1,51 @@
+﻿@model IEnumerable<e_commerce_web.Models.Role>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Danh sách Role</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.ActionLink("ID", "Index", new { sortOrder = ViewBag.IdSortParm })
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RoleName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RoleId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RoleName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        <a class="btn btn-success btn-tone m-r-5" asp-action="Edit" asp-route-id="@item.RoleId">Edit</a>
+                        <a class="btn btn-info btn-tone m-r-5" asp-action="Details" asp-route-id="@item.RoleId">Details</a>|
+                        <a class="btn btn-danger btn-tone m-r-5" asp-action="Delete" asp-route-id="@item.RoleId">Del</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
