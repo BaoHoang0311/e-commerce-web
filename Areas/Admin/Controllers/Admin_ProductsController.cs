@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using e_commerce_web.Models;
 using PagedList.Core;
+using e_commerce_web.Extension;
+using Microsoft.AspNetCore.Http;
 
 namespace e_commerce_web.Areas.Admin.Controllers
 {
@@ -14,10 +16,12 @@ namespace e_commerce_web.Areas.Admin.Controllers
     public class Admin_ProductsController : Controller
     {
         private readonly dbMarketsContext _context;
+        private readonly Saveimage _saveImages;
 
-        public Admin_ProductsController(dbMarketsContext context)
+        public Admin_ProductsController(dbMarketsContext context, Saveimage saveImages)
         {
             _context = context;
+            _saveImages = saveImages;
         }
         [HttpPost]
         public IActionResult AutoComplete(string prefix)
@@ -35,13 +39,17 @@ namespace e_commerce_web.Areas.Admin.Controllers
         // GET: Admin/Admin_Products
         public IActionResult Index([Bind("keySearch")] string keySearch, int? page)
         {
-            IQueryable<Product> lsCus = _context.Products;
+            IQueryable<Product> lsCus = _context.Products
+                                                .AsNoTracking()
+                                                .Include(m=>m.Cat)
+                                                .OrderByDescending(x => x.DateCreated);
+
             if (keySearch != null) lsCus = lsCus.Where(p => p.ProductName.Contains(keySearch));
 
             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
             var pageSize = 20;
 
-            PagedList<Product> models = new PagedList<Product>(lsCus.OrderByDescending(x => x.DateCreated).AsQueryable(), pageNumber, pageSize);
+            PagedList<Product> models = new PagedList<Product>(lsCus.AsQueryable(), pageNumber, pageSize);
 
             ViewBag.KKK = keySearch;
 
@@ -70,24 +78,26 @@ namespace e_commerce_web.Areas.Admin.Controllers
         // GET: Admin/Admin_Products/Create
         public IActionResult Create()
         {
-            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatId");
+            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatName");
             return View();
         }
-
         // POST: Admin/Admin_Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,Video,DateCreated,DateModified,BestSellers,HomeFlag,Active,Tags,Title,Alias,MetaDesc,MetaKey,UnitsInStock")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,BestSellers,HomeFlag,UnitsInStock")] Product product
+           , IFormFile Thumb)
         {
             if (ModelState.IsValid)
             {
+                product.DateModified = DateTime.Now;
+                product.Thumb = await _saveImages.UploadImage(@"Products/images/", Thumb,product.ProductName+"_thumb_" );
+                product.Alias = Utilities.SEOUrl(product.ProductName);
+                product.DateCreated = DateTime.Now;
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatId", product.CatId);
+            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatName", product.CatId);
             return View(product);
         }
 
@@ -104,16 +114,15 @@ namespace e_commerce_web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatId", product.CatId);
+            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatName", product.CatId);
             return View(product);
         }
 
         // POST: Admin/Admin_Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,Video,DateCreated,DateModified,BestSellers,HomeFlag,Active,Tags,Title,Alias,MetaDesc,MetaKey,UnitsInStock")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,BestSellers,HomeFlag,UnitsInStock")] Product product
+            ,IFormFile Thumb)
         {
             if (id != product.ProductId)
             {
@@ -124,6 +133,12 @@ namespace e_commerce_web.Areas.Admin.Controllers
             {
                 try
                 {
+                    var pro = _context.Products.AsNoTracking().FirstOrDefault(x => x.ProductId == id);
+                    product.Alias = Utilities.SEOUrl(product.ProductName);
+
+                    if (Thumb != null) product.Thumb = await _saveImages.UploadImage(@"Products/images/", Thumb, product.ProductName + "_Thumb_");
+                    else product.Thumb = pro.Thumb;
+
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
@@ -140,7 +155,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatId", product.CatId);
+            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatName", product.CatId);
             return View(product);
         }
 
@@ -159,7 +174,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
+            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatName", product.CatId);
             return View(product);
         }
 

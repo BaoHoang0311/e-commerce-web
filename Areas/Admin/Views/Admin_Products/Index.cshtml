@@ -1,4 +1,6 @@
-﻿@model IEnumerable<e_commerce_web.Models.Product>
+﻿@using PagedList.Core.Mvc;
+@model PagedList.Core.IPagedList<e_commerce_web.Models.Product>
+
 
 @{
     ViewData["Title"] = "Index";
@@ -7,131 +9,94 @@
 
 
 
-<div class="col-lg-8">
-    <form method="Post" asp-controller="Admin_Products" asp-area="Admin" asp-action="Index">
-        <label>Find by Name</label>
-        <input type="text" id="textPerson" name="keySearch" style="width:300px" />
-        <br />
-        <input type="submit" id="btnSubmit" value="Submit" />
-        <br />
-    </form>
-</div>
-
-
 <h1>Danh sách Sản Phẩm</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ShortDesc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Discount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Thumb)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateCreated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateModified)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BestSellers)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HomeFlag)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Active)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tags)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alias)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UnitsInStock)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cat)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProductName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ShortDesc)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Discount)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Thumb)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateCreated)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateModified)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BestSellers)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.HomeFlag)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Active)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tags)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Alias)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UnitsInStock)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Cat.CatId)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="card">
+    <div class="card-body">
+        <div class="row m-b-30">
+            <div class="col-lg-8">
+                <form method="Post" asp-controller="Admin_Products" asp-area="Admin" asp-action="Index">
+                    <label>Find by Name</label>
+                    <input type="text" id="textPerson" name="keySearch" style="width:300px" />
+                    <br />
+                    <input type="submit" id="btnSubmit" value="Submit" />
+                    <br />
+                </form>
+            </div>
+            <div class="col-lg-4 text-right">
+                <a class="btn btn-primary" asp-controller="Admin_Products" asp-area="Admin" asp-action="Create">
+                    <i class="anticon anticon-plus-circle m-r-5"></i>
+                    <span>Add Products</span>
+                </a>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover e-commerce-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Thumb</th>
+                        <th>ProductName</th>
+                        <th>Price</th>
+                        <th>Discount</th>
+                        <th>BestSellers</th>
+                        <th>HomeFlag</th>
+                        <th>UnitinStock</th>
+                        <th>Category</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var pro in Model)
+                    {
+                        <tr>
+                            <td>
+                                @pro.ProductId
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img class="img-fluid rounded" src="@pro.Thumb" style="max-width: 60px" alt="">
+                                </div>
+                            </td>
+                            <td>@pro.ProductName</td>
+                            <td>
+                                @String.Format(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"), "{0:C}", pro.Price)
+                            </td>
+                            <td>@pro.Discount</td>
+                            <td>@pro.BestSellers</td>
+                            <td>@pro.HomeFlag</td>
+                            <td>@pro.UnitsInStock</td>
+                            <td><a asp-controller="Admin_Categories" asp-action="Details" asp-route-id="@pro.Cat.CatId">@pro.Cat.CatName</a></td>
+
+                            <td class="text-right">
+                                <a class="btn btn-icon btn-hover btn-sm btn-rounded"
+                                   asp-controller="Admin_Products" asp-area="Admin" asp-action="Details" asp-route-id="@pro.ProductId">
+                                    <i class="anticon anticon-info"></i>
+                                </a>
+                                <a class="btn btn-icon btn-hover btn-sm btn-rounded pull-right"
+                                   asp-controller="Admin_Products" asp-area="Admin" asp-action="Edit" asp-route-id="@pro.ProductId">
+                                    <i class="anticon anticon-edit"></i>
+                                </a>
+                                <a class="btn btn-icon btn-hover btn-sm btn-rounded"
+                                   asp-controller="Admin_Products" asp-area="Admin" asp-action="Delete" asp-route-id="@pro.ProductId">
+                                    <i class="anticon anticon-delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div aria-label="Page navigation example">
+                <ul class="pagination">
+                    <pager class="pager-container" list="@Model"
+                           options="@PagedListRenderOptions.Bootstrap4PageNumbersPlusPrevAndNext" asp-action="Index"
+                           asp-controller="Admin_Products" asp-route-keySearch="@ViewBag.KKK" asp-route-page="@ViewBag.CurrentPage" />
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts_Admin {
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY="
