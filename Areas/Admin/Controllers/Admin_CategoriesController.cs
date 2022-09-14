@@ -24,7 +24,6 @@ namespace e_commerce_web.Areas.Admin.Controllers
             _context = context;
             _saveimages = saveimages;
         }
-        [HttpPost]
         public IActionResult AutoComplete(string prefix)
         {
             var cus = (from cate in _context.Categories

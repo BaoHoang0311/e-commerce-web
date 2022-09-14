@@ -15,7 +15,7 @@
     <h4>Product</h4>
     <hr />
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-8">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ProductId" />
             <div class="form-group">
@@ -33,7 +33,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="CatId" class="control-label"></label>
-                <select asp-for="CatId" class="form-control" asp-items="ViewBag.CatId" readonly></select>
+                <select asp-for="CatId" class="form-control" asp-items="ViewBag.CatId" disabled></select>
                 <span asp-validation-for="CatId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -49,7 +49,7 @@
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="BestSellers" readonly /> @Html.DisplayNameFor(model => model.BestSellers)
+                    <input class="form-check-input" asp-for="BestSellers" disabled /> @Html.DisplayNameFor(model => model.BestSellers)
                 </label>
             </div>
             <div class="form-group form-check">
@@ -105,31 +105,5 @@
             readURL_cover(this);
         });
 
-        $('#ShortDesc').summernote({
-            placeholder: 'ShortDesc...',
-            fontNames: ['Arial', 'Arial Black'],
-            styleTags: [
-                'p',
-                'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
-            ],
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['para', ['ul', 'ol', 'paragraph']],
-            ],
-        });
-        $('#Description').summernote({
-            placeholder: 'Description...',
-            fontNames: ['Arial', 'Arial Black'],
-            styleTags: [
-                'p',
-                'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
-            ],
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['para', ['ul', 'ol', 'paragraph']],
-            ],
-        });
     </script>
 }

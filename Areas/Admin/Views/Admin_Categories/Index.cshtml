@@ -12,7 +12,7 @@
     <div class="card-body">
         <div class="row m-b-30">
             <div class="col-lg-8">
-                <form method="Post" asp-controller="Admin_Categories" asp-area="Admin" asp-action="Index">
+                <form method="get" asp-controller="Admin_Categories" asp-area="Admin" asp-action="Index">
                     <label>Find by Name</label>
                     <input type="text" id="textPerson" name="keySearch" style="width:300px" />
                     <br />
@@ -95,7 +95,7 @@
                         {
                             "prefix": request.term
                         },
-                        type: "Post",
+                        type: "Get",
                         success: function (data) {
                             response($.map(data, function (item) {
                                 return item;

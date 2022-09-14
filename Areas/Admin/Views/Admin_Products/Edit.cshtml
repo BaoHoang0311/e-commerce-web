@@ -20,10 +20,12 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <input type="hidden" asp-for="ProductId" />
+
             <div class="form-group">
                 <label asp-for="ProductName" class="control-label"></label>
                 <input asp-for="ProductName" class="form-control" />
@@ -130,6 +132,7 @@
                     ['style', ['style']],
                     ['font', ['bold', 'underline', 'clear']],
                     ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link', 'picture', 'video']],
                 ],
             });
             $('#Description').summernote({
@@ -143,6 +146,7 @@
                     ['style', ['style']],
                     ['font', ['bold', 'underline', 'clear']],
                     ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link', 'picture', 'video']],
                 ],
             });
     </script>

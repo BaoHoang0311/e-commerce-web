@@ -7,20 +7,23 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-
-
 <h1>Danh sách Sản Phẩm</h1>
 
 <div class="card">
     <div class="card-body">
         <div class="row m-b-30">
             <div class="col-lg-8">
-                <form method="Post" asp-controller="Admin_Products" asp-area="Admin" asp-action="Index">
-                    <label>Find by Name</label>
+                <form method="get" asp-controller="Admin_Products" asp-area="Admin" asp-action="Index">
+                    <label>AutoComplete</label>
                     <input type="text" id="textPerson" name="keySearch" style="width:300px" />
-                    <br />
                     <input type="submit" id="btnSubmit" value="Submit" />
                     <br />
+                </form>
+            </div>
+            <div class="col-lg-8">
+                <form method="get" asp-controller="Admin_Products" asp-area="Admin" asp-action="Index">
+                    <label>Find by Name</label>
+                    <input type="text" id="keyword" value="@ViewBag.KKK" style="width:300px" />
                 </form>
             </div>
             <div class="col-lg-4 text-right">
@@ -30,23 +33,38 @@
                 </a>
             </div>
         </div>
+        <div class="col-lg-4">
+            <select class="custom-select" style="min-width: 180px;" id="catID" asp-items="ViewBag.CATE">
+                <option>Choose Category</option>
+                @if (ViewBag.CATE_Name != null)
+                {
+                    <option selected>@ViewBag.CATE_Name</option>
+                }
+                <option value="All">All</option>
+            </select>
+        </div>
         <div class="table-responsive">
             <table class="table table-hover e-commerce-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>
+                            <a asp-controller="Admin_Products" asp-action="Sort"
+                               asp-route-sortOrder="@ViewBag.ID"
+                               asp-route-CatId="@ViewBag.CATE_ID"
+                               asp-route-keySearch="@ViewBag.KKK">ID</a>
+                        </th>
                         <th>Thumb</th>
                         <th>ProductName</th>
                         <th>Price</th>
-                        <th>Discount</th>
                         <th>BestSellers</th>
                         <th>HomeFlag</th>
+                        <th>Active</th>
                         <th>UnitinStock</th>
                         <th>Category</th>
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="records_table">
                     @foreach (var pro in Model)
                     {
                         <tr>
@@ -58,13 +76,22 @@
                                     <img class="img-fluid rounded" src="@pro.Thumb" style="max-width: 60px" alt="">
                                 </div>
                             </td>
-                            <td>@pro.ProductName</td>
+                            <td>
+                                @if (pro.UnitsInStock == 0 || pro.Active == false)
+                                {
+                                    <span class="badge badge-danger">@pro.ProductName</span>
+                                }
+                                else
+                                {
+                                    @pro.ProductName
+                                }
+                            </td>
                             <td>
                                 @String.Format(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"), "{0:C}", pro.Price)
                             </td>
-                            <td>@pro.Discount</td>
                             <td>@pro.BestSellers</td>
                             <td>@pro.HomeFlag</td>
+                            <td>@pro.Active</td>
                             <td>@pro.UnitsInStock</td>
                             <td><a asp-controller="Admin_Categories" asp-action="Details" asp-route-id="@pro.Cat.CatId">@pro.Cat.CatName</a></td>
 
@@ -89,54 +116,112 @@
             <div aria-label="Page navigation example">
                 <ul class="pagination">
                     <pager class="pager-container" list="@Model"
-                           options="@PagedListRenderOptions.Bootstrap4PageNumbersPlusPrevAndNext" asp-action="Index"
-                           asp-controller="Admin_Products" asp-route-keySearch="@ViewBag.KKK" asp-route-page="@ViewBag.CurrentPage" />
+                           options="@PagedListRenderOptions.Bootstrap4PageNumbersPlusPrevAndNext"
+                           asp-action="Index"
+                           asp-controller="Admin_Products"
+                           asp-route-keySearch="@ViewBag.KKK"
+                           asp-route-page="@ViewBag.CurrentPage"
+                           asp-route-catID="@ViewBag.CATE_ID"
+                           asp-route-sortOrder="@ViewBag.ID" />
                 </ul>
             </div>
         </div>
     </div>
 </div>
 
+
 @section Scripts_Admin {
+
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY="
             crossorigin="anonymous"></script>
-
     <script>
-        $(document).ready(function () {
-            $("#textPerson").autocomplete({
-                source: function (request, response) {
-                    $.ajax({
-                        url: '/Admin/Admin_Products/AutoComplete/',
-                        data:
-                        {
-                            "prefix": request.term
-                        },
-                        type: "Post",
-                        success: function (data) {
-                            response($.map(data, function (item) {
-                                return item;
-                            }))
-                        },
-                        error: function (response) {
-                            alert(response.responseText);
-                        },
-                        failure: function (response) {
-                            alert(response.responseText);
-                        }
-                    });
-                },
-                minLength: 1,
-                classes: {
-                    "ui-autocomplete": "highlight"
-                },
-            }).data("ui-autocomplete")._renderItem = function (ul, item) {
-                var inner_html = '<div><img src="' + item.avatar + '" style="width:100px;height:100px"><span>' + item.label + '</span></div>';
-                return $("<li></li>")
-                    .data("ui-autocomplete-item", item)
-                    .append(inner_html)
-                    .appendTo(ul);
-            };
+        // auto complete
+        $("#textPerson").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/Admin/Admin_Products/AutoComplete/',
+                    data:
+                    {
+                        "prefix": request.term
+                    },
+                    type: "GET",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return item;
+                        }))
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            },
+            minLength: 1,
+            classes: {
+                "ui-autocomplete": "highlight"
+            },
+        }).data("ui-autocomplete")._renderItem = function (ul, item) {
+            var inner_html = '<div><img src="' + item.avatar + '" style="width:100px;height:100px"><span>' + item.label + '</span></div>';
+            return $("<li></li>")
+                .data("ui-autocomplete-item", item)
+                .append(inner_html)
+                .appendTo(ul);
+        };
+
+
+        var timer;
+        $('#keyword').on('keyup', function () {
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                LiveSearch();
+            }, 500);
+        })
+
+        // lọc Cate
+        jQuery("#catID").change(function () {
+            LiveSearch()
         });
+
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+        function LiveSearch() {
+            var strkeyword = $('#keyword').val();
+
+            var _catID = $('#catID').val();
+            catid = parseFloat(_catID);
+
+            if (_catID == "") {
+                var qsp = 'CatId';
+                catid = getUrlParameter(qsp);
+            }
+
+            $.ajax({
+                type: "GET",
+                url: '/Admin/Admin_Products/Filter',
+                datatype: "json",
+                data: {
+                    keyword: strkeyword,
+                    cat_ID: catid,
+                },
+                async: true,
+                success: function (results) {
+                    if (results.status == "success") {
+                        window.location.href = results.redirectUrl;
+                    }
+                },
+                error: function (xhr) {
+                    alert('error');
+                }
+            });
+        };
+
     </script>
 }
