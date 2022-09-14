@@ -18,8 +18,8 @@ namespace e_commerce_web.Models
         public string ShortDesc { get; set; }
         public string Description { get; set; }
         public int? CatId { get; set; }
-        public int? Price { get; set; }
-        public int? Discount { get; set; }
+        public decimal? Price { get; set; }
+        public decimal? Discount { get; set; }
         public string Thumb { get; set; }
         public DateTime? DateCreated { get; set; }
         public DateTime? DateModified { get; set; }

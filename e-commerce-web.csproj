@@ -39,6 +39,7 @@
     <Folder Include="Data\Extension\" />
     <Folder Include="wwwroot\Categories\images\" />
     <Folder Include="wwwroot\Customers\images\" />
+    <Folder Include="wwwroot\Products\images\" />
   </ItemGroup>
 
   <ItemGroup>

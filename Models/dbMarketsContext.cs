@@ -35,6 +35,7 @@ namespace e_commerce_web.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -236,11 +237,13 @@ namespace e_commerce_web.Models
 
                 entity.Property(e => e.DateModified).HasColumnType("datetime");
 
+                entity.Property(e => e.Discount).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
+
                 entity.Property(e => e.ProductName)
                     .IsRequired()
                     .HasMaxLength(255);
-
-                entity.Property(e => e.ShortDesc).HasMaxLength(255);
 
                 entity.Property(e => e.Thumb).HasMaxLength(255);
 

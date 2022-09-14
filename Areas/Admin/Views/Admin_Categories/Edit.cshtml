@@ -18,7 +18,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="CatId" />
             <div class="form-group">
@@ -32,24 +32,15 @@
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="Thumb" class="control-label"></label>
-                <input asp-for="Thumb" class="form-control" />
-                <span asp-validation-for="Thumb" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Alias" class="control-label"></label>
-                <input asp-for="Alias" class="form-control" />
-                <span asp-validation-for="Alias" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Cover" class="control-label"></label>
-                <input asp-for="Cover" class="form-control" />
+                <input asp-for="Cover" type="file" class="form-control" />
                 <span asp-validation-for="Cover" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SchemaMarkup" class="control-label"></label>
-                <input asp-for="SchemaMarkup" class="form-control" />
-                <span asp-validation-for="SchemaMarkup" class="text-danger"></span>
+
+                <div class="form-group text-center">
+                    <img id="frames" src="@Model.Cover" onerror="this.onerror = null;
+                            this.src = '@Model.Cover'" alt="" style="width:200px;height:200px" />
+                </div>
+
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -62,3 +53,33 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+@section Scripts_Admin{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            /* input nhận file*/
+            $('#Cover').change(function () {
+                $("#frames").html('');
+                for (var i = 0; i < $(this)[0].files.length; i++) {
+                    $("#frames").append('<img src="' + window.URL.createObjectURL(this.files[i]) + '" width="100px" height="100px"/>');
+                }
+            });
+
+            /* đọc file input */
+            function readURL_cover(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#frames').attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+            $("#Cover").change(function () {
+                readURL_cover(this);
+            });
+        });
+    </script>
+}

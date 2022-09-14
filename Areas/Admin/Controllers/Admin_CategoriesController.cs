@@ -24,7 +24,6 @@ namespace e_commerce_web.Areas.Admin.Controllers
             _context = context;
             _saveimages = saveimages;
         }
-        [HttpPost]
         public IActionResult AutoComplete(string prefix)
         {
             var cus = (from cate in _context.Categories
@@ -42,7 +41,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
             IQueryable<Category> lsCat = _context.Categories;
             if (keySearch != null) lsCat = lsCat.Where(p => p.CatName.Contains(keySearch));
             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
-            var pageSize = 1;
+            var pageSize = 5;
 
             PagedList<Category> models = new PagedList<Category>(lsCat.AsQueryable(), pageNumber, pageSize);
 
@@ -83,7 +82,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 category.Alias = Utilities.SEOUrl(category.CatName);
-                category.Cover = await _saveimages.UploadImage(@"Categories/images/",Cover,category.CatName+"_cover");
+                category.Cover = await _saveimages.UploadImage(@"Categories/images/",Cover,category.CatName+"_cover_");
                 
                 _context.Add(category);
                 await _context.SaveChangesAsync();
@@ -109,11 +108,10 @@ namespace e_commerce_web.Areas.Admin.Controllers
         }
 
         // POST: Admin/Admin_Categories/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CatId,CatName,Description,ParentId,Levels,Ordering,Published,Thumb,Title,Alias,MetaDesc,MetaKey,Cover,SchemaMarkup")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("CatId,CatName,Published,Cover")] 
+        Category category , IFormFile Cover)
         {
             if (id != category.CatId)
             {
@@ -124,6 +122,12 @@ namespace e_commerce_web.Areas.Admin.Controllers
             {
                 try
                 {
+                    var cat = _context.Categories.AsNoTracking().FirstOrDefault(x => x.CatId == id);
+                    category.Alias = Utilities.SEOUrl(category.CatName);
+
+                    if( Cover != null)category.Cover = await _saveimages.UploadImage(@"Categories/images/", Cover, category.CatName + "_cover_");
+                    else category.Cover = cat.Cover;
+
                     _context.Update(category);
                     await _context.SaveChangesAsync();
                 }

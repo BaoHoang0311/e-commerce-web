@@ -10,6 +10,10 @@ namespace e_commerce_web.Extension
 {
     public static class Utilities
     {
+        public static string ToVND(this double Dongia)
+        {
+            return Dongia.ToString("#,###" + " đ");
+        }
         public static string GetRandomKey(int length = 5)
         {
             //chuỗi mẫu (pattern)
@@ -25,7 +29,12 @@ namespace e_commerce_web.Extension
             return sb.ToString();
         }
         public static int PAGE_SIZE = 20;
-
+        public static void CreateIfMissing(string path)
+        {
+            bool folderExists = Directory.Exists(path);
+            if (!folderExists)
+                Directory.CreateDirectory(path);
+        }
         public static string ToUrlFriendly(this string url)
         {
             var result = url.ToLower().Trim();

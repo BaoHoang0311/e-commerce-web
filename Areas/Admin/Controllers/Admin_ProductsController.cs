@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using e_commerce_web.Models;
 using PagedList.Core;
+using e_commerce_web.Extension;
+using Microsoft.AspNetCore.Http;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace e_commerce_web.Areas.Admin.Controllers
 {
@@ -14,16 +17,18 @@ namespace e_commerce_web.Areas.Admin.Controllers
     public class Admin_ProductsController : Controller
     {
         private readonly dbMarketsContext _context;
-
-        public Admin_ProductsController(dbMarketsContext context)
+        private readonly Saveimage _saveImages;
+        public INotyfService _notifyService { get; }
+        public Admin_ProductsController(dbMarketsContext context, Saveimage saveImages, INotyfService notifyService)
         {
             _context = context;
+            _saveImages = saveImages;
+            _notifyService = notifyService;
         }
-        [HttpPost]
         public IActionResult AutoComplete(string prefix)
         {
             var pro = (from product in _context.Products
-                       where product.ProductName.Contains(prefix)
+                       where product.ProductName.Contains(prefix) 
                        orderby product.DateCreated descending
                        select new
                        {
@@ -32,22 +37,68 @@ namespace e_commerce_web.Areas.Admin.Controllers
                        }).Take(5).ToList();
             return Json(pro);
         }
-        // GET: Admin/Admin_Products
-        public IActionResult Index([Bind("keySearch")] string keySearch, int? page)
+        #region AutoComplete , Cate riêng
+        //public IActionResult Filter(int? CatId)
+        //{
+        //    var url = $"/Admin/Admin_Products/Index?catID={CatId}";
+        //    var zzz = Json(new { status = "success", redirectUrl = url });
+        //    return zzz;
+        //}
+        #endregion
+
+        #region Search , Cate chung
+        public IActionResult Filter(int? cat_ID , string keyword )
         {
-            IQueryable<Product> lsCus = _context.Products;
+            var url = $"/Admin/Admin_Products/Index?CatId={cat_ID}&keySearch={keyword}";
+            if (cat_ID == null && keyword == null)
+            {
+                url = $"/Admin/Admin_Products/Index";
+            }
+            var zzz = Json(new { status = "success", redirectUrl = url });
+            return zzz;
+        }
+        public IActionResult Sort(string sortOrder,int? CatId, string keySearch)
+        {
+            ViewBag.ID = string.IsNullOrEmpty(sortOrder) ? "abc" : "";
+            return RedirectToAction("Index", "Admin_Products", new { sortOrder=ViewBag.ID, CatId=CatId, keySearch= keySearch });
+        }
+        public IActionResult Index( string keySearch , int? page, int? CatId,  string sortOrder)
+        {
+            var pageNumber = page == null || page <= 0 ? 1 : page.Value;
+            var pageSize = 2;
+
+            IQueryable<Product> lsCus = _context.Products
+                                                .AsNoTracking()
+                                                .Include(m => m.Cat)
+                                                .OrderByDescending(x => x.DateCreated); ;
+
             if (keySearch != null) lsCus = lsCus.Where(p => p.ProductName.Contains(keySearch));
 
-            var pageNumber = page == null || page <= 0 ? 1 : page.Value;
-            var pageSize = 20;
+            if (CatId != null) lsCus = lsCus.Where(p => p.CatId == CatId);
 
-            PagedList<Product> models = new PagedList<Product>(lsCus.OrderByDescending(x => x.DateCreated).AsQueryable(), pageNumber, pageSize);
+            if (sortOrder == "abc")
+            {
+                lsCus = lsCus.OrderBy(m => m.ProductId);
+            }
+            ViewBag.ID = sortOrder;
+
+            ViewBag.CurrentPage = page;
+
+            ViewBag.CATE = new SelectList(_context.Categories, "CatId", "CatName");
+            ViewBag.CATE_ID = CatId;
+
+            if (CatId.HasValue)
+            {
+                var catname = _context.Categories.FirstOrDefault(m => m.CatId == CatId).CatName;
+                ViewBag.CATE_Name = catname;
+            }
+
+            PagedList<Product> models = new PagedList<Product>(lsCus.AsQueryable(), pageNumber, pageSize);
 
             ViewBag.KKK = keySearch;
-
             return View(models);
         }
-
+        #endregion
         // GET: Admin/Admin_Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -70,24 +121,27 @@ namespace e_commerce_web.Areas.Admin.Controllers
         // GET: Admin/Admin_Products/Create
         public IActionResult Create()
         {
-            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatId");
+            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatName");
             return View();
         }
-
         // POST: Admin/Admin_Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,Video,DateCreated,DateModified,BestSellers,HomeFlag,Active,Tags,Title,Alias,MetaDesc,MetaKey,UnitsInStock")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,BestSellers,HomeFlag,Active,UnitsInStock")] Product product
+           , IFormFile Thumb)
         {
             if (ModelState.IsValid)
             {
+                product.DateModified = DateTime.Now;
+                product.Thumb = await _saveImages.UploadImage(@"Products/images/", Thumb,product.ProductName+"_thumb_" );
+                product.Alias = Utilities.SEOUrl(product.ProductName);
+                product.DateCreated = DateTime.Now;
                 _context.Add(product);
                 await _context.SaveChangesAsync();
+                _notifyService.Success("Bạn đã tạo sản phẩm thành công");
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatId", product.CatId);
+            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatName", product.CatId);
             return View(product);
         }
 
@@ -104,16 +158,15 @@ namespace e_commerce_web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatId", product.CatId);
+            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatName", product.CatId);
             return View(product);
         }
 
         // POST: Admin/Admin_Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,Video,DateCreated,DateModified,BestSellers,HomeFlag,Active,Tags,Title,Alias,MetaDesc,MetaKey,UnitsInStock")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,BestSellers,HomeFlag,Active,UnitsInStock")] Product product
+            ,IFormFile Thumb)
         {
             if (id != product.ProductId)
             {
@@ -124,7 +177,18 @@ namespace e_commerce_web.Areas.Admin.Controllers
             {
                 try
                 {
+                    
+                    product.DateModified = DateTime.Now;
+
+                    var pro = _context.Products.AsNoTracking().FirstOrDefault(x => x.ProductId == id);
+                    product.DateCreated = pro.DateCreated;
+                    product.Alias = Utilities.SEOUrl(product.ProductName);
+
+                    if (Thumb != null) product.Thumb = await _saveImages.UploadImage(@"Products/images/", Thumb, product.ProductName + "_Thumb_");
+                    else product.Thumb = pro.Thumb;
+
                     _context.Update(product);
+                    _notifyService.Success("Bạn đã update sản phẩm thành công");
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -140,7 +204,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatId", product.CatId);
+            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatName", product.CatId);
             return View(product);
         }
 
@@ -159,7 +223,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
+            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatName", product.CatId);
             return View(product);
         }
 
@@ -171,6 +235,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
             var product = await _context.Products.FindAsync(id);
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
+            _notifyService.Success("Bạn đã xóa sản phẩm thành công");
             return RedirectToAction(nameof(Index));
         }
 

@@ -44,6 +44,7 @@ namespace e_commerce_web
             services.AddMemoryCache();
             services.AddControllersWithViews();
 
+            // add noti
             services.AddNotyf(config =>
             {
                 config.DurationInSeconds = 10;
