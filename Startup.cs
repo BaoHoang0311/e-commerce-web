@@ -1,5 +1,6 @@
 ﻿using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
+using e_commerce_web.Data;
 using e_commerce_web.Extension;
 using e_commerce_web.Models;
 using Microsoft.AspNetCore.Builder;
@@ -38,6 +39,8 @@ namespace e_commerce_web
             services.AddDbContext<dbMarketsContext>(options =>
                 options.UseSqlServer(_connection));
 
+            services.AddScoped<ProductServices>();
+            
             services.AddMemoryCache();
             services.AddSession();
             services.AddScoped<Saveimage>();

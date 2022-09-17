@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Harmic - Home Two</title>
+    <title>Harmic-@ViewData["Title"]</title>
     <meta name="robots" content="noindex, follow" />
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,20 +38,12 @@
                     <div class="row align-items-center">
                         <div class="col-lg-12">
                             <div class="header-middle-wrap">
-                                <a href="index.html" class="header-logo">
+                                <a href="/" class="header-logo">
                                     <img src="~/Userassets/images/logo/dark.png" alt="Header Logo">
                                 </a>
                                 <div class="header-search-area d-none d-lg-block">
-                                    <form action="#" class="header-searchbox">
-                                        <select class="nice-select select-search-category wide">
-                                            <option value="all">All Category</option>
-                                            <option value="product-item">Product Item</option>
-                                            <option value="product-item-2">Product Item 02</option>
-                                            <option value="product-item-3">Product Item 03</option>
-                                            <option value="product-item-4">Product Item 04</option>
-                                            <option value="product-item-5">Product Item 05</option>
-                                        </select>
-                                        <input class="input-field" type="text" placeholder="Search Products">
+                                    <form method="get" asp-controller="Products" asp-area="" asp-action="Index" class="header-searchbox">
+                                        <input class="input-field" type="text" id="textPerson" name="keySearch" value="@ViewBag.KKK" placeholder="Search Products">
                                         <button class="btn btn-outline-whisper btn-primary-hover" type="submit"><i class="pe-7s-search"></i></button>
                                     </form>
                                 </div>
@@ -65,11 +57,6 @@
                                                 <li><a class="dropdown-item" href="my-account.html">My account</a></li>
                                                 <li><a class="dropdown-item" href="login-register.html">Login | Register</a></li>
                                             </ul>
-                                        </li>
-                                        <li class="d-none d-md-block">
-                                            <a href="wishlist.html">
-                                                <i class="pe-7s-like"></i>
-                                            </a>
                                         </li>
                                         <li class="d-block d-lg-none">
                                             <a href="#searchBar" class="search-btn toolbar-btn">
@@ -106,21 +93,11 @@
                                                 <a href="/">Home</a>
                                             </li>
                                             <li>
-                                                <a href="about.html">About</a>
+                                                <a href="/about.html">About</a>
                                             </li>
                                             <li class="megamenu-holder">
-                                                <a href="/Products/Index">
+                                                <a asp-area="" asp-action="Index" asp-controller="Products">
                                                     Shop
-                                                </a>
-                                            </li>
-                                            <li class="drop-holder">
-                                                <a href="/Blog/Index">
-                                                    Blog
-                                                </a>
-                                            </li>
-                                            <li class="drop-holder">
-                                                <a href="#">
-                                                    Hướng dẫn mua
                                                 </a>
                                             </li>
                                             <li>
@@ -317,5 +294,48 @@
     <script src="~/Userassets/js/main.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
     @await Component.InvokeAsync("Notyf")
+
+    @section Scripts {
+
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+        <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY="
+                crossorigin="anonymous"></script>
+        <script>
+            // auto complete
+            $("#textPerson").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/Products/AutoComplete/',
+                        data:
+                        {
+                            "prefix": request.term
+                        },
+                        type: "GET",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return item;
+                            }))
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        },
+                        failure: function (response) {
+                            alert(response.responseText);
+                        }
+                    });
+                },
+                minLength: 1,
+                classes: {
+                    "ui-autocomplete": "highlight"
+                },
+            }).data("ui-autocomplete")._renderItem = function (ul, item) {
+                var inner_html = '<div><img src="' + item.avatar + '" style="width:100px;height:100px"><span>' + item.label + '</span></div>';
+                return $("<li></li>")
+                    .data("ui-autocomplete-item", item)
+                    .append(inner_html)
+                    .appendTo(ul);
+            };
+        </script>
+    }
 </body>
 </html>

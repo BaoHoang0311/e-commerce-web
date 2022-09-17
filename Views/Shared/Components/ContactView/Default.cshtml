@@ -1,0 +1,18 @@
+﻿@model e_commerce_web.Data.ViewModel.ContactVM
+
+<div class="widget-contact-info pb-6">
+    <ul>
+        <li>
+            <i class="pe-7s-map-marker"></i>
+            @Model.Location
+        </li>
+        <li>
+            <i class="pe-7s-mail"></i>
+            <a href="mailto://@Model.Email">@Model.Email</a>
+        </li>
+        <li>
+            <i class="pe-7s-phone"></i>
+            @Model.Phone
+        </li>
+    </ul>
+</div>
