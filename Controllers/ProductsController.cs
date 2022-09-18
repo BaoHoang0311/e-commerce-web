@@ -1,4 +1,5 @@
 ﻿using e_commerce_web.Data;
+using e_commerce_web.Data.ViewModel;
 using e_commerce_web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -34,20 +35,18 @@ namespace e_commerce_web.Controllers
             return Json(pro);
         }
 
-
-        // trang sản phẩm, show 8 cái
+        // trang sản phẩm, show hết
         [Route("/trang-san-pham")]
-        public IActionResult Index( string keySearch, int? page, int? CatId, string sortOrder)
+        public IActionResult Index( string keySearch, int? page, int? CatId, string sortOrder,string Cat,ListCategoryVM zzz )
         {
             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
-            var pageSize = 2;
-            
+            var pageSize = 4;
             //var LsProducts = _context.Products
             //                            .Include(x => x.Cat)
             //                            .Where(p => p.Active == true)
             //                            .OrderByDescending(x => x.DateCreated);
 
-            var LsProducts = _services.XL_trang_san_pham(keySearch, CatId, sortOrder);
+            var LsProducts = _services.XL_trang_san_pham(keySearch, CatId, sortOrder, Cat);
 
             ViewBag.Count = LsProducts.Count();
 

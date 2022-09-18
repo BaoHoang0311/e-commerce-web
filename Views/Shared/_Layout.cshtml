@@ -292,6 +292,7 @@
 
     <!--Main JS (Common Activation Codes)-->
     <script src="~/Userassets/js/main.js"></script>
+    <partial name="/Views/Shared/PartialView/Jquery.cshtml" />
     @await RenderSectionAsync("Scripts", required: false)
     @await Component.InvokeAsync("Notyf")
 

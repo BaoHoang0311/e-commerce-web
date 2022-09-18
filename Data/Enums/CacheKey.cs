@@ -8,7 +8,7 @@ namespace e_commerce_web.Data.Enums
     public enum CacheKey
     {
         Categories,
-        Popular,
+        News,
         Social,
         Contact,
     }
