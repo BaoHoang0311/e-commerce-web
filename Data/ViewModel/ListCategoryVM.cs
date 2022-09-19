@@ -14,13 +14,10 @@ namespace e_commerce_web.Data.ViewModel
             ListCate = new();
         }
         public List<Category_check> ListCate { get; set; }
-        public string LeftSearch { get; set; }
-
     }
     public class Category_check
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public bool Selected { get; set; }
     }
 }

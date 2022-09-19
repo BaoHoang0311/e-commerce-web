@@ -169,7 +169,9 @@
                 .data("ui-autocomplete-item", item)
                 .append(inner_html)
                 .appendTo(ul);
-        };
+            };
+
+
         var timer;
         $('#keyword').on('keyup', function () {
             clearTimeout(timer);
@@ -181,11 +183,21 @@
         jQuery("#catID").change(function () {
             LiveSearch()
         });
+
         function getUrlParameter(name) {
             name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
             var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
                 results = regex.exec(location.search);
             return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+        function validate() {
+            var remember = document.getElementById("remember");
+            if (remember.checked) {
+                alert("checked");
+            } else {
+                alert("You didn't check it! Let me check it for you.");
+            }
         }
         function LiveSearch() {
             var strkeyword = $('#keyword').val();

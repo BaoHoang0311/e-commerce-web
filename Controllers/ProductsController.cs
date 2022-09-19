@@ -34,43 +34,54 @@ namespace e_commerce_web.Controllers
                        }).Take(5).ToList();
             return Json(pro);
         }
-
+        public IActionResult Filter(int? SortPrice, string keyword,  string LeftCat )
+        {
+            // cat_ID là cái sort giá , còn Cat là loại doanh mục
+            int i = 5;
+            return RedirectToAction("Index", "Products", new {
+                sortOrder = SortPrice,
+                keySearch =keyword,
+                Cat = LeftCat
+            });
+        }
         // trang sản phẩm, show hết
         [Route("/trang-san-pham")]
-        public IActionResult Index( string keySearch, int? page, int? CatId, string sortOrder,string Cat,ListCategoryVM zzz )
+        public IActionResult Index( /*string keySearch, string sortOrder,string Cat,*/int? CatId,
+            int? page, SearchVM searchVM)
+
         {
             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
-            var pageSize = 4;
-            //var LsProducts = _context.Products
-            //                            .Include(x => x.Cat)
-            //                            .Where(p => p.Active == true)
-            //                            .OrderByDescending(x => x.DateCreated);
+            var pageSize = 8;
 
-            var LsProducts = _services.XL_trang_san_pham(keySearch, CatId, sortOrder, Cat);
+            var LsProducts = _services.XL_trang_san_pham(searchVM);
 
             ViewBag.Count = LsProducts.Count();
 
-            ViewBag.ID = sortOrder;
+            ViewBag.SortPrice =  searchVM.sortOrder;
 
             ViewBag.CurrentPage = page;
 
-            ViewBag.CATE = new SelectList(_context.Categories, "CatId", "CatName");
-            ViewBag.CATE_ID = CatId;
+            // Cat-left search
+            if (searchVM.Cat != null) ViewBag.cheeek = int.Parse(searchVM.Cat);
 
-            ViewBag.KKK = keySearch;
+            ViewBag.A = (searchVM.A == null) ? 1 : searchVM.A;
+            ViewBag.B = (searchVM.B == null) ? 1000 : searchVM.B;
+            ViewBag.Cat = (searchVM.Cat == null) ? null: searchVM.Cat;
 
-            if (CatId.HasValue)
-            {
-                var catname = _context.Categories.FirstOrDefault(m => m.CatId == CatId).CatName;
-                ViewBag.CATE_Name = catname;
-            }
+            ViewBag.KKK = searchVM.keySearch;
 
-            PagedList<Product> models = new PagedList<Product>(LsProducts.AsEnumerable(), pageNumber, pageSize);
+            //if (CatId.HasValue)
+            //{
+            //    var catname = _context.Categories.FirstOrDefault(m => m.CatId == CatId).CatName;
+            //    ViewBag.CATE_Name = catname;
+            //}
+
+            PagedList<Product> models = new PagedList<Product>(LsProducts.AsQueryable(), pageNumber, pageSize);
 
             return View(models);
         }
-        [Route("/san-pham/{Alias}.html", Name = "abc")]
-        public async  Task<IActionResult> Details(int id, string Alias)
+        [Route("/san-pham/{Alias}.html")]
+        public async Task<IActionResult> Details(int id, string Alias)
         {
             var singleproduct = await _context.Products
                                                 .AsNoTracking()

@@ -45,7 +45,6 @@ namespace e_commerce_web.Data.ViewComponents
                     { 
                         Id =item.CatId, 
                         Name =item.CatName, 
-                        Selected=false 
                     }
                 );  
             }
