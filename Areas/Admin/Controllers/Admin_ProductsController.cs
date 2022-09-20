@@ -28,7 +28,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
         public IActionResult AutoComplete(string prefix)
         {
             var pro = (from product in _context.Products
-                       where product.ProductName.Contains(prefix) 
+                       where product.ProductName.Contains(prefix)
                        orderby product.DateCreated descending
                        select new
                        {
@@ -47,7 +47,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
         #endregion
 
         #region Search , Cate chung
-        public IActionResult Filter(int? cat_ID , string keyword )
+        public IActionResult Filter(int? cat_ID, string keyword)
         {
             var url = $"/Admin/Admin_Products/Index?CatId={cat_ID}&keySearch={keyword}";
             if (cat_ID == null && keyword == null)
@@ -57,16 +57,15 @@ namespace e_commerce_web.Areas.Admin.Controllers
             var zzz = Json(new { status = "success", redirectUrl = url });
             return zzz;
         }
-        public IActionResult Sort(string sortOrder,int? CatId, string keySearch)
+        public IActionResult Sort(string sortOrder, int? CatId, string keySearch)
         {
             ViewBag.ID = string.IsNullOrEmpty(sortOrder) ? "abc" : "";
-            return RedirectToAction("Index", "Admin_Products", new { sortOrder=ViewBag.ID, CatId=CatId, keySearch= keySearch });
+            return RedirectToAction("Index", "Admin_Products", new { sortOrder = ViewBag.ID, CatId = CatId, keySearch = keySearch });
         }
-        public IActionResult Index( string keySearch , int? page, int? CatId,  string sortOrder)
+        public IActionResult Index(string keySearch, int? page, int? CatId, string sortOrder)
         {
             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
             var pageSize = 2;
-
             IQueryable<Product> lsCus = _context.Products
                                                 .AsNoTracking()
                                                 .Include(m => m.Cat)
@@ -87,6 +86,8 @@ namespace e_commerce_web.Areas.Admin.Controllers
             ViewBag.CATE = new SelectList(_context.Categories, "CatId", "CatName");
             ViewBag.CATE_ID = CatId;
 
+            ViewBag.KKK = keySearch;
+
             if (CatId.HasValue)
             {
                 var catname = _context.Categories.FirstOrDefault(m => m.CatId == CatId).CatName;
@@ -95,7 +96,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
 
             PagedList<Product> models = new PagedList<Product>(lsCus.AsQueryable(), pageNumber, pageSize);
 
-            ViewBag.KKK = keySearch;
+
             return View(models);
         }
         #endregion
@@ -133,7 +134,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 product.DateModified = DateTime.Now;
-                product.Thumb = await _saveImages.UploadImage(@"Products/images/", Thumb,product.ProductName+"_thumb_" );
+                product.Thumb = await _saveImages.UploadImage(@"Products/images/", Thumb, product.ProductName + "_thumb_");
                 product.Alias = Utilities.SEOUrl(product.ProductName);
                 product.DateCreated = DateTime.Now;
                 _context.Add(product);
@@ -166,7 +167,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,BestSellers,HomeFlag,Active,UnitsInStock")] Product product
-            ,IFormFile Thumb)
+            , IFormFile Thumb)
         {
             if (id != product.ProductId)
             {
@@ -177,7 +178,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
             {
                 try
                 {
-                    
+
                     product.DateModified = DateTime.Now;
 
                     var pro = _context.Products.AsNoTracking().FirstOrDefault(x => x.ProductId == id);

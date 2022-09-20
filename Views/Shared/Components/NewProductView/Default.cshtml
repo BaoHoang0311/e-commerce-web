@@ -1,0 +1,29 @@
+﻿@using e_commerce_web.Extension;
+@model e_commerce_web.Data.ViewModel.NewProductVM
+
+<div class="widgets-area mb-9">
+    <h2 class="widgets-title mb-5">New Products</h2>
+    <div class="widgets-item">
+        <div class="swiper-container widgets-list-slider">
+            @foreach (var item in Model.LsTopProduct)
+            {
+                string url = $"/san-pham/{@item.Alias}.html";
+                <div class="swiper-slide">
+                    <div class="product-list-item">
+                        <div class="product-img img-zoom-effect">
+                            <a href="@url">
+                                <img class="img-full" src="@item.Thumb" alt="Product Images">
+                            </a>
+                        </div>
+                        <div class="product-content">
+                            <a class="product-name" href="@url">@item.ProductName</a>
+                            <div class="price-box pb-1">
+                                <span class="new-price">@item.Price.Value.ToVND()</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

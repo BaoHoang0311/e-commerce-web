@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
       },
-      "launchUrl": "trang-admin"
+      //"launchUrl": "trang-admin"
     },
     "e_commerce_web": {
       "commandName": "Project",
@@ -26,7 +26,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
       },
-      "launchUrl": "trang-admin"
+      //"launchUrl": "trang-admin"
     }
   }
 }

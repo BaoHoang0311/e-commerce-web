@@ -37,12 +37,14 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Data\Extension\" />
+    <Folder Include="Data\Services\" />
     <Folder Include="wwwroot\Categories\images\" />
     <Folder Include="wwwroot\Customers\images\" />
     <Folder Include="wwwroot\Products\images\" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\Shared\Components\SocialView\Default.cshtml" />
     <None Include="wwwroot\AdminAssets\assets\es6\app.js" />
     <None Include="wwwroot\AdminAssets\assets\es6\constant\theme-constant.js" />
     <None Include="wwwroot\AdminAssets\assets\es6\core\core.js" />

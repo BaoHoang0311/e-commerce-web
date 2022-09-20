@@ -36,7 +36,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
             return Json(cus);
         }
         // GET: Admin/Admin_Categories
-        public IActionResult Index( [Bind("keySearch")] string keySearch , int? page  )
+        public IActionResult Index( string keySearch , int? page  )
         {
             IQueryable<Category> lsCat = _context.Categories;
             if (keySearch != null) lsCat = lsCat.Where(p => p.CatName.Contains(keySearch));

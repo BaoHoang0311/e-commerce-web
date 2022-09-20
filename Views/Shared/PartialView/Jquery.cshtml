@@ -1,0 +1,39 @@
+﻿<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+<script>
+    // auto complete
+    $("#textPerson").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '/Products/AutoComplete/',
+                data:
+                {
+                    "prefix": request.term
+                },
+                type: "GET",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return item;
+                    }))
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        },
+        minLength: 1,
+        classes: {
+            "ui-autocomplete": "highlight"
+        },
+    }).data("ui-autocomplete")._renderItem = function (ul, item) {
+        var inner_html = '<div><img src="' + item.avatar + '" style="width:100px;height:100px"><span>' + item.label + '</span></div>';
+        return $("<li></li>")
+            .data("ui-autocomplete-item", item)
+            .append(inner_html)
+            .appendTo(ul);
+        };
+</script>
+}

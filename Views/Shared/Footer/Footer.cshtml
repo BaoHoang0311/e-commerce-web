@@ -1,4 +1,6 @@
-﻿<!-- Begin Footer Area -->
+﻿
+
+<!-- Begin Footer Area -->
 <div class="footer-area">
     <div class="footer-top section-space-y-axis-100 text-black" data-bg-color="#e5ddcc">
         <div class="container">
@@ -11,81 +13,10 @@
                             </a>
                         </div>
                         <p class="short-desc mb-2">Lorem ipsum dolor sit amet, consectet adipi elit, sed do eius tempor incididun ut labore gthydolore. </p>
-                        <div class="widget-contact-info pb-6">
-                            <ul>
-                                <li>
-                                    <i class="pe-7s-map-marker"></i>
-                                    184 Main Rd E, St Albans VIC 3021,
-                                </li>
-                                <li>
-                                    <i class="pe-7s-mail"></i>
-                                    <a href="mailto://info@example.com">info@example.com</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="payment-method">
-                            <a href="javascript:void(0)">
-                                <img src="~/Userassets/images/payment/1.png" alt="Payment Method">
-                            </a>
-                        </div>
+                        @await Component.InvokeAsync("ContactView")
                     </div>
                 </div>
-                <div class="col-lg-2 offset-lg-1 col-md-6 pt-10 pt-lg-0">
-                    <div class="widget-item">
-                        <h3 class="widget-title mb-5">Information</h3>
-                        <ul class="widget-list-item">
-                            <li>
-                                <a href="javascript:void(0)">FAQ</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)">Shipping</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)">Returns</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)">Order Status</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)">Gift Card Balance</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)">Accessibility</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-2 offset-lg-1 col-md-6 pt-10 pt-lg-0">
-                    <div class="widget-item">
-                        <h3 class="widget-title mb-5">My Account</h3>
-                        <ul class="widget-list-item">
-                            <li>
-                                <a href="javascript:void(0)">My Account</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)">Checkout</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)">Validation</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)">Wishlist</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)">Terms of Use</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)">FAQ</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 pt-10 pt-lg-0">
-                    <div class="widget-item">
-                        <h3 class="widget-title mb-5">Newsletters</h3>
-                        <p class="short-desc">Lorem ipsum dolor sit amet, consectet adipi elit, sed do eius tempor.</p>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>

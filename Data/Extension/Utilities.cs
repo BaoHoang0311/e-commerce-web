@@ -10,7 +10,7 @@ namespace e_commerce_web.Extension
 {
     public static class Utilities
     {
-        public static string ToVND(this double Dongia)
+        public static string ToVND(this decimal Dongia)
         {
             return Dongia.ToString("#,###" + " đ");
         }

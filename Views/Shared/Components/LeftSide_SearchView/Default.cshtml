@@ -1,0 +1,49 @@
+﻿@model e_commerce_web.Data.ViewModel.ListCategoryVM
+
+
+<form method="get" asp-controller="Products" asp-action="Index">
+    <div class="widgets-searchbox mb-9">
+        <input class="input-field" type="text" id="LS" name="keySearch" placeholder="Search" value="@ViewBag.KKK">
+        <button class="widgets-searchbox-btn" type="submit">
+            <i class="pe-7s-search"></i>
+        </button>
+    </div>
+
+    <div class="widgets-area mb-9">
+        <h2 class="widgets-title mb-5">Category</h2>
+        <div class="widgets-item">
+            <ul class="widgets-checkbox">
+                @for (int i = 0; i < Model.ListCate.Count; i++)
+                {
+
+                    <li>
+                        <input class="shopitem-list"
+                               id="@Model.ListCate[i].Id"
+                               type="checkbox"
+                               name="Cat"
+                               value="@Model.ListCate[i].Id"
+                               @if (ViewBag.cheeek == Model.ListCate[i].Id) { <text> checked="checked" </text> } />
+                        <label for="@Model.ListCate[i].Id">@Model.ListCate[i].Name</label>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="widgets-area widgets-filter mb-9">
+        <h2 class="widgets-title mb-5">Price Filter</h2>
+        <div class="price-filter" background-color:#bac34e>
+            <input type="text" class="js-range-slider" value="" />
+        </div>
+
+        <div class="extra-controls">
+            <input type="text" class="js-input-from" name="A" value="@ViewBag.A" />x1000đ<br>
+            <input type="text" class="js-input-to" name="B" value="@ViewBag.B" />x1000đ
+
+        </div>
+        <div class="price-slider-amount">
+            <button class="btn btn-primary btn-secondary-hover">Filter</button>
+        </div>
+
+    </div>
+</form>
+

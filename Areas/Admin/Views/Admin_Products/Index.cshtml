@@ -15,7 +15,7 @@
             <div class="col-lg-8">
                 <form method="get" asp-controller="Admin_Products" asp-area="Admin" asp-action="Index">
                     <label>AutoComplete</label>
-                    <input type="text" id="textPerson" name="keySearch" style="width:300px" />
+                    <input type="text" id="textPerson" name="keySearch" style="width:300px" value="@ViewBag.KKK" />
                     <input type="submit" id="btnSubmit" value="Submit" />
                     <br />
                 </form>
@@ -169,7 +169,7 @@
                 .data("ui-autocomplete-item", item)
                 .append(inner_html)
                 .appendTo(ul);
-        };
+            };
 
 
         var timer;
@@ -179,7 +179,6 @@
                 LiveSearch();
             }, 500);
         })
-
         // lọc Cate
         jQuery("#catID").change(function () {
             LiveSearch()
@@ -192,17 +191,15 @@
             return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         }
 
+
         function LiveSearch() {
             var strkeyword = $('#keyword').val();
-
             var _catID = $('#catID').val();
             catid = parseFloat(_catID);
-
             if (_catID == "") {
                 var qsp = 'CatId';
                 catid = getUrlParameter(qsp);
             }
-
             $.ajax({
                 type: "GET",
                 url: '/Admin/Admin_Products/Filter',
@@ -222,6 +219,5 @@
                 }
             });
         };
-
     </script>
 }
