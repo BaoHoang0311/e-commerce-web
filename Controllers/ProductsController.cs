@@ -40,12 +40,10 @@ namespace e_commerce_web.Controllers
             var url = $"/trang-san-pham?sortOrder={SortPrice}&keySearch={keyword}&Cat={LeftCat}";
             var zzz = Json(new { status = "success", redirectUrl = url });
             return zzz;
-
         }
         // trang sản phẩm, show hết
         [Route("/trang-san-pham")]
         public IActionResult Index ( int? CatId, int? page, SearchVM searchVM)
-
         {
             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
             var pageSize = 3;
@@ -61,17 +59,11 @@ namespace e_commerce_web.Controllers
             // Cat-left search
             if (searchVM.Cat != null) ViewBag.cheeek = int.Parse(searchVM.Cat);
 
-            ViewBag.A = (searchVM.A == null) ? 1 : searchVM.A;
-            ViewBag.B = (searchVM.B == null) ? 1000 : searchVM.B;
+            ViewBag.A = (searchVM.A == null ) ? 1 : searchVM.A;
+            ViewBag.B = (searchVM.B == null ) ? 1000: searchVM.B;
             ViewBag.Cat = (searchVM.Cat == null) ? null: searchVM.Cat;
 
             ViewBag.KKK = searchVM.keySearch;
-
-            //if (CatId.HasValue)
-            //{
-            //    var catname = _context.Categories.FirstOrDefault(m => m.CatId == CatId).CatName;
-            //    ViewBag.CATE_Name = catname;
-            //}
 
             PagedList<Product> models = new PagedList<Product>(LsProducts.AsQueryable(), pageNumber, pageSize);
 
@@ -95,21 +87,23 @@ namespace e_commerce_web.Controllers
             return View(singleproduct);
         }
         [Route("/danh-muc/{Alias}.html")]
-        public async Task<IActionResult> ListCategory(int id, string Alias)
+        public IActionResult ListCategory(int id, string Alias)
         {
-            var singleproduct = await _context.Products
-                                                .AsNoTracking()
-                                                .Include(x => x.Cat)
-                                                .FirstOrDefaultAsync(p => p.Alias == Alias);
-            if (singleproduct == null)
-            {
-                return View(nameof(Index));
-            }
-            ViewData["RelatedProduct"] = await _context.Products.AsNoTracking()
-                                                .Where(p => p.CatId == singleproduct.CatId
-                                                            && p.ProductId != singleproduct.ProductId)
-                                                .ToListAsync();
-            return View(singleproduct);
+            //var singleproduct = await _context.Products
+            //                                    .AsNoTracking()
+            //                                    .Include(x => x.Cat)
+            //                                    .FirstOrDefaultAsync(p => p.Alias == Alias);
+            //if (singleproduct == null)
+            //{
+            //    return View(nameof(Index));
+            //}
+            //ViewData["RelatedProduct"] = await _context.Products.AsNoTracking()
+            //                                    .Where(p => p.CatId == singleproduct.CatId
+            //                                                && p.ProductId != singleproduct.ProductId)
+            //                                    .ToListAsync();
+            //return View(singleproduct);
+
+            return RedirectToAction("Index","Products", new { Alias =Alias });
         }
     }
 }

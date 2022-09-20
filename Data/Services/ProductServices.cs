@@ -40,6 +40,11 @@ namespace e_commerce_web.Data
             {
                 LsProducts = LsProducts.OrderBy(x => x.Price.Value);
             }
+            // lấy sản phẩm danh mục
+            if (searchVM.Alias != null)
+            {
+                LsProducts = LsProducts.Where(p => p.Cat.Alias == searchVM.Alias);
+            }
             return LsProducts;
         }
     }

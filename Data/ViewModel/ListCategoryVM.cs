@@ -19,5 +19,6 @@ namespace e_commerce_web.Data.ViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Alias { get; set; }
     }
 }

@@ -103,8 +103,14 @@
                                             <li>
                                                 <a href="/contact.html">Contact</a>
                                             </li>
-                                            <li>
-                                                <a href="/trang-admin">Admin</a>
+                                            <li class="drop-holder">
+                                                <a href="javascript:void(0)">
+                                                    Danh mục sản phẩm
+                                                    <i class="fa fa-chevron-down"></i>
+                                                </a>
+                                                <ul class="drop-menu">
+                                                    @await Component.InvokeAsync("Category_Nav")
+                                                </ul>
                                             </li>
                                         </ul>
                                     </nav>

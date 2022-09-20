@@ -11,5 +11,6 @@ namespace e_commerce_web.Data.Enums
         News,
         Social,
         Contact,
+        Categories_Nav,
     }
 }
