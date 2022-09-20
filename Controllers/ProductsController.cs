@@ -36,22 +36,19 @@ namespace e_commerce_web.Controllers
         }
         public IActionResult Filter(int? SortPrice, string keyword,  string LeftCat )
         {
-            // cat_ID là cái sort giá , còn Cat là loại doanh mục
-            int i = 5;
-            return RedirectToAction("Index", "Products", new {
-                sortOrder = SortPrice,
-                keySearch =keyword,
-                Cat = LeftCat
-            });
+            // là cái sort giá , còn Cat là loại doanh mục
+            var url = $"/trang-san-pham?sortOrder={SortPrice}&keySearch={keyword}&Cat={LeftCat}";
+            var zzz = Json(new { status = "success", redirectUrl = url });
+            return zzz;
+
         }
         // trang sản phẩm, show hết
         [Route("/trang-san-pham")]
-        public IActionResult Index( /*string keySearch, string sortOrder,string Cat,*/int? CatId,
-            int? page, SearchVM searchVM)
+        public IActionResult Index ( int? CatId, int? page, SearchVM searchVM)
 
         {
             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
-            var pageSize = 8;
+            var pageSize = 3;
 
             var LsProducts = _services.XL_trang_san_pham(searchVM);
 

@@ -191,14 +191,7 @@
             return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         }
 
-        function validate() {
-            var remember = document.getElementById("remember");
-            if (remember.checked) {
-                alert("checked");
-            } else {
-                alert("You didn't check it! Let me check it for you.");
-            }
-        }
+
         function LiveSearch() {
             var strkeyword = $('#keyword').val();
             var _catID = $('#catID').val();

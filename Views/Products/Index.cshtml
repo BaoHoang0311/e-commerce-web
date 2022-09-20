@@ -53,26 +53,10 @@
                             <span></span>Kết quả tìm kiếm<span> @ViewBag.Count</span>
                         </li>
                         <li class="short">
-
                             <select class="nice-select wide rounded-0" id="catID">
                                 <option value="1">Sort by High Price</option>
                                 <option value="2">Sort by Low Price</option>
                             </select>
-
-                            <select id="example1">
-                                <option value="1">one</option>
-                                <option value="2">two</option>
-                                <option value="3">three</option>
-                                <option value="4">four</option>
-                            </select>
-
-                            <select id="example2">
-                                <option id="1">one</option>
-                                <option id="2">two</option>
-                                <option id="3">three</option>
-                                <option id="4">four</option>
-                            </select>
-
                         </li>
                     </ul>
                 </div>
@@ -210,41 +194,36 @@
     </script>
 
     <script>
-        $("#example1").on('change', function () {
-            alert($(this).val());
-        });
 
-        $("#example2").on('change', function () {
-            alert($(this).find('option:selected').attr('id'));
-        });
-
-        var Cat1 = [];
-        $('.widgets-checkbox input[type="checkbox"]:checked').each(function () {
-            Cat1.push($(this).val());
-        });
 
         $("#catID").on('change', function () {
-            //alert($(this).val());
             var strkeyword = $('#LS').val();
-            //alert(strkeyword);
 
             var Cat1 = $("input[name='Cat']:checked").val()
-            alert(Cat1);
+            alert('Cat nesadasd'+Cat1);
 
             var _catID = $('#catID').val();
             catid = parseFloat(_catID);
 
             $.ajax({
-                type: "Post",
+                type: "Get",
                 url: 'Products/Filter',
                 data: {
                     SortPrice : catid,
                     keyword: strkeyword,
-                    Cat: Cat1,
+                    LeftCat : Cat1,
                 },
-                success: function (response) { // do something with response
+                datatype: "json",
+                async: true,
+                success: function (results)
+                {
+                    if (results.status == "success") {
+                        window.location.href = results.redirectUrl;
+                    }
+                    // do something with response
                 },
-                error: function (response) {
+                error: function (response)
+                {
                     // do something with response
                 }
             });
@@ -252,38 +231,3 @@
         });
     </script>
 }
-
-
-
-@*function LiveSearch() {
-
-        var strkeyword = $('#LS').val();
-
-        /* var check = $('#LS').val();*/
-
-        var _catID = $('#catID').val();
-        catid = parseFloat(_catID);
-
-        if (_catID == "") {
-            var qsp = 'CatId';
-            catid = getUrlParameter(qsp);
-        }
-        $.ajax({
-            type: "GET",
-            url: '/Products/Filter',
-            datatype: "json",
-            data: {
-                cat_ID: catid,
-                keyword = strkeyword,
-            },
-            async: true,
-            success: function (results) {
-                if (results.status == "success") {
-                    window.location.href = results.redirectUrl;
-                }
-            },
-            error: function (xhr) {
-                alert('error');
-            }
-        });
-    };*@
