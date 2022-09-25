@@ -5,6 +5,7 @@ using e_commerce_web.Extension;
 using e_commerce_web.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -40,11 +41,10 @@ namespace e_commerce_web
                 options.UseSqlServer(_connection));
 
             services.AddScoped<ProductServices>();
+            services.AddScoped<Saveimage>();
             
             services.AddMemoryCache();
-            services.AddSession();
-            services.AddScoped<Saveimage>();
-            services.AddMemoryCache();
+            
             services.AddControllersWithViews();
 
             // add noti
@@ -55,28 +55,22 @@ namespace e_commerce_web
                 config.Position = NotyfPosition.BottomRight;
             });
 
-            services.AddSession(options => 
-            { 
-                options.Cookie.Name = "e_commerce.Session"; 
-            });
-
-            services.AddAuthentication("CookieAuthentication_e_commerce")
-                        .AddCookie("CookieAuthentication_e_commerce", config =>
-                        {
-                            config.Cookie.Name = "e_commerce_UserLoginCookie";
-                            config.ExpireTimeSpan = TimeSpan.FromMinutes(30); ;
-                            config.LoginPath = "/dang-nhap.html";
-                            config.LogoutPath = "/dang-xuat.html";
-                            config.AccessDeniedPath = "/not-found.html";
-                        });
-
-            services.ConfigureApplicationCookie(options =>
+            // *1
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
             {
-                // Cookie settings,only this changes expiration
+                options.Cookie.Name = "e_commerce_UserLoginCookie";
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
                 options.Cookie.HttpOnly = true;
-                options.Cookie.Expiration = TimeSpan.FromMinutes(15);
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                options.Cookie.IsEssential = true;
             });
+            services.AddAuthentication("abc")
+                        .AddCookie("abc", config =>
+                        {
+                            config.ExpireTimeSpan = TimeSpan.FromMinutes(30); ;
+                        });
+            // getstring settring
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -121,3 +115,11 @@ namespace e_commerce_web
         }
     }
 }
+//services.AddAuthentication("CookieAuthentication_e_commerce")
+//            .AddCookie("CookieAuthentication_e_commerce", config =>
+//            {
+//                config.ExpireTimeSpan = TimeSpan.FromMinutes(30); ;
+//                config.LoginPath = "/dang-nhap.html";
+//                config.LogoutPath = "/dang-xuat.html";
+//                config.AccessDeniedPath = "/not-found.html";
+//            });

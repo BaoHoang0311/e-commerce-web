@@ -12,5 +12,6 @@ namespace e_commerce_web.Data.ViewModel
         public int? A { get; set; }
         public int? B {get;set;}
         public string sortOrder { get; set; }
+        public string Alias { get; set; }
     }
 }

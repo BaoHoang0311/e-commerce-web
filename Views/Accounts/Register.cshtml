@@ -1,0 +1,64 @@
+﻿@model e_commerce_web.Data.ViewModel.RegisterVM
+
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="login-register-area section-space-y-axis-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 pt-10 pt-lg-0">
+                <form method="Post" asp-controller="Accounts" asp-action="Register">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="login-form">
+                        <h4 class="login-title">Register</h4>
+                        <div class="row">
+                            <div class="col-md-12 col-12">
+                                <label>FullName<span style="color:red"> * </span></label>
+                                <input asp-for="FullName" type="text" placeholder="Full Name">
+                                <span asp-validation-for="FullName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-12">
+                                <label>Email<span style="color:red"> * </span></label>
+                                <input asp-for="Email" placeholder="Email Address" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Birthday" class="control-label"></label>
+                                <input asp-for="Birthday" type="date" class="form-control" />
+                                <span asp-validation-for="Birthday" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Phone" class="control-label"></label>
+                                <input asp-for="Phone" class="form-control" />
+                                <span asp-validation-for="Phone" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Password<span style="color:red"> * </span></label>
+                                <input asp-for="Password" placeholder="Password">
+                                <span asp-validation-for="Password" class="text-danger"></span>
+
+                            </div>
+                            <div class="col-md-6">
+                                <label>Confirm Password<span style="color:red"> * </span></label>
+                                <input asp-for="ConfirmPassword" placeholder="Confirm Password">
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 pt-5">
+                                <button class="btn btn-custom-size lg-size btn-secondary btn-primary-hover rounded-0">Register</button>
+                            </div>
+                            <div class="col-md-6 pt-5">
+                                <a class="btn btn-custom-size lg-size btn-secondary btn-primary-hover rounded-0" asp-action="Index" asp-controller="Home" asp-area="">Back to Home</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

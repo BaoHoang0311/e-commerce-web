@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using e_commerce_web.Data.ViewModel;
 
 #nullable disable
 
@@ -340,5 +341,9 @@ namespace e_commerce_web.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public DbSet<e_commerce_web.Data.ViewModel.RegisterVM> RegisterVM { get; set; }
+
+        public DbSet<e_commerce_web.Data.ViewModel.LogInVM> LogInVM { get; set; }
     }
 }

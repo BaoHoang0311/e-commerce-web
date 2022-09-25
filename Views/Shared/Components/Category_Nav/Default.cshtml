@@ -1,0 +1,9 @@
+﻿@model e_commerce_web.Data.ViewModel.ListCategoryVM
+
+@for (int i = 0; i < Model.ListCate.Count; i++)
+{
+    string url = $"/danh-muc/{Model.ListCate[i].Alias}.html";
+    <li class="sub-dropdown-holder">
+        <a href="@url">@Model.ListCate[i].Name</a>
+    </li>
+}

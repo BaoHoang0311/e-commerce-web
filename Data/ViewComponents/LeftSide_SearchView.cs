@@ -41,12 +41,13 @@ namespace e_commerce_web.Data.ViewComponents
             {
                 cate.ListCate.Add
                 (
-                    new Category_check 
-                    { 
-                        Id =item.CatId, 
-                        Name =item.CatName, 
+                    new Category_check
+                    {
+                        Id = item.CatId,
+                        Name = item.CatName,
+                        Alias = item.Alias
                     }
-                );  
+                );
             }
             return cate;
         }
