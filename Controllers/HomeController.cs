@@ -47,11 +47,6 @@ namespace e_commerce_web.Controllers
         {
             return View();
         }
-        [Route("#mobile.html")]
-        public IActionResult mobile()
-        {
-            return View();
-        }
         public IActionResult Privacy()
         {
             return View();

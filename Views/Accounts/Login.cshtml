@@ -1,0 +1,44 @@
+﻿@model e_commerce_web.Data.ViewModel.LogInVM
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="login-register-area section-space-y-axis-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <form method="Post" asp-action="Login" asp-controller="Accounts">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="login-form">
+                        <h4 class="login-title">Login</h4>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label asp-for="UserName" class="control-label"></label>
+                                <input asp-for="UserName" class="form-control" />
+                                <span asp-validation-for="UserName" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-12">
+                                <label asp-for="Password" class="control-label"></label>
+                                <input asp-for="Password" class="form-control" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 pt-5">
+                                <button class="btn btn-custom-size lg-size btn-secondary btn-primary-hover rounded-0">Login</button>
+                            </div>
+                            <div class="col-md-6 pt-5">
+                                <a class="btn btn-custom-size lg-size btn-secondary btn-primary-hover rounded-0" asp-action="Index" asp-controller="Home" asp-area="">Back to Home</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
