@@ -12,7 +12,7 @@ namespace e_commerce_web.Models
             Orders = new HashSet<Order>();
         }
 
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         public string FullName { get; set; }
         public DateTime? Birthday { get; set; }
         public string Avatar { get; set; }

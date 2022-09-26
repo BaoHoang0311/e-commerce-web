@@ -2,6 +2,7 @@
 using e_commerce_web.Data.ViewModel;
 using e_commerce_web.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -46,6 +47,27 @@ namespace e_commerce_web.Controllers
         }
         [HttpGet]
         [AllowAnonymous]
+        public IActionResult ValidateName(string FullName)
+        {
+            try
+            {
+                var khachhang = _context.Customers.AsNoTracking()
+                                            .FirstOrDefault(x => x.FullName == FullName);
+                var quanly = _context.Accounts.AsNoTracking()
+                                                .FirstOrDefault(x => x.FullName == FullName);
+                if (khachhang == null && quanly == null)
+                {
+                    return Json(data: true);
+                }
+                return Json(data: "Tên FullName: " + FullName + " đã tồn tại");
+            }
+            catch
+            {
+                return Json(data: false);
+            }
+        }
+        [HttpGet]
+        [AllowAnonymous]
         public IActionResult ValidateEmail(string Email)
         {
             try
@@ -71,7 +93,7 @@ namespace e_commerce_web.Controllers
         }
         [AllowAnonymous]
         [Route("/dang-nhap.html")]
-        public IActionResult Login(LogInVM login, string returnUrl = null)
+        public IActionResult Login(string returnUrl = null)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -87,26 +109,29 @@ namespace e_commerce_web.Controllers
             try
             {
                 var kh = _context.Customers
-                                        .AsNoTracking()
-                                        .FirstOrDefault(x => x.FullName == dangnhap.UserName
-                                        && x.Password == dangnhap.Password);
+                                    .AsNoTracking()
+                                    .FirstOrDefault(x => x.FullName == dangnhap.UserName
+                                    && x.Password == dangnhap.Password);
                 if (kh == null)
                 {
                     _notifyService.Warning("Bạn đã nhập thông tin sai");
                     return RedirectToAction("Login", "Accounts");
                 }
-                if (kh.Active == false) return View("NotFound");
-
+                //update LastLogin
+                kh.LastLogin = DateTime.Now;
+                _context.Customers.Update(kh);
+                _context.SaveChanges();
                 // Lưu session
-                HttpContext.Session.SetString("KhachHang_Ma", kh.CustomerId.ToString());
+                HttpContext.Session.SetString("KhachHang_Ma", kh.CustomerId);
                 // Identity
                 var USERCLAIM = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, kh.FullName),
                     new Claim("CustomerID", kh.CustomerId.ToString()),
                 };
-                ClaimsIdentity grandmaIdentity = new ClaimsIdentity(USERCLAIM, "User e-commerce Identity");
+                ClaimsIdentity grandmaIdentity = new ClaimsIdentity(USERCLAIM, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(new ClaimsPrincipal(grandmaIdentity));
+                _notifyService.Success("Bạn đăng nhập thành công");
                 return RedirectToAction("Index", "Home");
             }
             catch
@@ -139,7 +164,7 @@ namespace e_commerce_web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var taikhoanID = HttpContext.Session.GetString("CustomerID");
+                var taikhoanID = HttpContext.Session.GetString("KhachHang_Ma");
                 if (taikhoanID != null)
                 {
                     return RedirectToAction("Index", "Products");
@@ -147,6 +172,7 @@ namespace e_commerce_web.Controllers
 
                 Customer cus = new Customer()
                 {
+                    CustomerId = Guid.NewGuid().ToString(),
                     FullName = registerVM.FullName,
                     Password = registerVM.Password,
                     Phone = registerVM.Phone,
@@ -164,5 +190,6 @@ namespace e_commerce_web.Controllers
                 return RedirectToAction("Register", "Accounts");
             }
         }
+
     }
 }

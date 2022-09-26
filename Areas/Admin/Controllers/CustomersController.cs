@@ -49,7 +49,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
             return View(models);
         }
         // GET: Admin/Customers/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
@@ -83,6 +83,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                customer.CustomerId = Guid.NewGuid().ToString();
                 customer.CreateDate = DateTime.Now;
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
@@ -113,7 +114,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CustomerId,FullName,Birthday,Avatar,Address,Email,Phone,LocationId,District,Ward,CreateDate,Password,LastLogin,Active")] Customer customer)
+        public async Task<IActionResult> Edit(string id, [Bind("CustomerId,FullName,Birthday,Avatar,Address,Email,Phone,LocationId,District,Ward,CreateDate,Password,LastLogin,Active")] Customer customer)
         {
             if (id != customer.CustomerId)
             {
@@ -143,7 +144,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
         }
 
         // GET: Admin/Customers/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
             {
@@ -170,7 +171,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CustomerExists(int id)
+        private bool CustomerExists(string id)
         {
             return _context.Customers.Any(e => e.CustomerId == id);
         }
