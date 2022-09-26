@@ -13,7 +13,7 @@ namespace e_commerce_web.Models
         }
 
         public int OrderId { get; set; }
-        public int? CustomerId { get; set; }
+        public string CustomerId { get; set; }
         public DateTime? OrderDate { get; set; }
         public DateTime? ShipDate { get; set; }
         public int TransactStatusId { get; set; }

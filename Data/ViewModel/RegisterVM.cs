@@ -10,10 +10,11 @@ namespace e_commerce_web.Data.ViewModel
     public class RegisterVM
     {
         [Key]
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         [Display(Name = "Họ Và Tên")]
         [Required(ErrorMessage = "Vui lòng nhập Họ Tên")]
+        [Remote(action:"ValidateName",controller: "Accounts")]
         public string FullName { get; set; }
 
         [Display(Name = "Ngày sinh nhật")]

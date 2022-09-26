@@ -82,6 +82,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 account.CreateDate = DateTime.Now;
                 _context.Add(account);
                 await _context.SaveChangesAsync();

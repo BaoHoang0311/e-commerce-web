@@ -1,7 +1,9 @@
 ﻿@using e_commerce_web.Extension
 @using System.Security.Claims;
 
+@{      
 
+}
 <button class="btn btn-link dropdown-toggle ht-btn p-0" type="button" id="settingButton" data-bs-toggle="dropdown" aria-expanded="false">
     <i class="pe-7s-users"></i>@User.GetSpecificClaim(ClaimTypes.Name)
 </button>
@@ -9,7 +11,7 @@
 
     @if (User.Identity.IsAuthenticated)
     {
-        <li><a class="dropdown-item" asp-controller="Profile" asp-area="" asp-action="Index">MyAccount</a></li>
+        <li><a class="dropdown-item" asp-controller="Profile" asp-area="" asp-action="Index" asp-route-id="@User.GetSpecificClaim("CustomerID")" >MyAccount</a></li>
         <li><a class="dropdown-item" asp-controller="Accounts" asp-area="" asp-action="Logout">Logout</a></li>
     }
     else

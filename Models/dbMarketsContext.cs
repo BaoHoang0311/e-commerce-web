@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using e_commerce_web.Data.ViewModel;
 
 #nullable disable
 
@@ -36,7 +35,7 @@ namespace e_commerce_web.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -113,7 +112,9 @@ namespace e_commerce_web.Models
 
             modelBuilder.Entity<Customer>(entity =>
             {
-                entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
+                entity.Property(e => e.CustomerId)
+                    .HasMaxLength(50)
+                    .HasColumnName("CustomerID");
 
                 entity.Property(e => e.Address).HasMaxLength(255);
 
@@ -161,7 +162,9 @@ namespace e_commerce_web.Models
             {
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
 
-                entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
+                entity.Property(e => e.CustomerId)
+                    .HasMaxLength(50)
+                    .HasColumnName("CustomerID");
 
                 entity.Property(e => e.LocationId).HasColumnName("LocationID");
 
@@ -341,9 +344,5 @@ namespace e_commerce_web.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-        public DbSet<e_commerce_web.Data.ViewModel.RegisterVM> RegisterVM { get; set; }
-
-        public DbSet<e_commerce_web.Data.ViewModel.LogInVM> LogInVM { get; set; }
     }
 }

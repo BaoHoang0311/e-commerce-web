@@ -59,8 +59,9 @@ namespace e_commerce_web
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
-                options.Cookie.Name = "e_commerce_UserLoginCookie";
-                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                //options.Cookie.Name = "e_commerce_UserLoginCookie";
+                options.Cookie.Name = "abc";
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
@@ -69,8 +70,6 @@ namespace e_commerce_web
                         {
                             config.ExpireTimeSpan = TimeSpan.FromMinutes(30); ;
                         });
-            // getstring settring
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
