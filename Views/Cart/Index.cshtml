@@ -1,0 +1,91 @@
+﻿@model e_commerce_web.Data.ViewModel.ListCartItemVM
+@{
+    ViewData["Title"] = "Cart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-lg-12">
+    <div class="breadcrumb-item">
+        <h2 class="breadcrumb-heading">Giỏ hàng</h2>
+        <ul>
+            <li>
+                <a asp-controller="Products" asp-action="Index">Trang Sản phẩm<i class="pe-7s-angle-right"></i></a>
+            </li>
+            <li>Cart</li>
+        </ul>
+    </div>
+</div>
+
+<div class="cart-area section-space-y-axis-50">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <form action="javascript:void(0)">
+                    <div class="table-content table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="product_remove">remove</th>
+                                    <th class="product-thumbnail">images</th>
+                                    <th class="cart-product-name">Product</th>
+                                    <th class="product-price">Unit Price</th>
+                                    <th class="product-quantity">Quantity</th>
+                                    <th class="product-subtotal">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    @foreach (var item in Model.ListCart)
+                                    {
+                                        string url = $"/san-pham/{@item.sanpham.Alias}.html";
+                                        <tr>
+                                            <td class="product_remove">
+                                                <a href="javascript:void(0)">
+                                                    <i class="pe-7s-close" title="Remove"></i>
+                                                </a>
+                                            </td>
+                                            <td class="product-thumbnail">
+                                                <a href="@url">
+                                                    <img src="@item.sanpham.Thumb" alt="Cart Thumbnail">
+                                                </a>
+                                            </td>
+                                            <td class="product-name"><a href="@url">@item.sanpham.ProductName</a></td>
+                                            <td class="product-price"><span class="amount">@item.sanpham.Price</span></td>
+                                            <td class="quantity">
+                                                <div class="cart-plus-minus">
+                                                    <input class="cart-plus-minus-box" value="@item.amount" type="text">
+                                                </div>
+                                            </td>
+                                            <td class="product-subtotal"><span class="amount">@item.Total()</span></td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="coupon-all">
+                                <div class="coupon2">
+                                    <a class="button" asp-controller="Products" asp-action="Index">Tiếp tục mua sắm</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5 ml-auto">
+                            <div class="cart-page-total">
+                                <h2>Cart totals</h2>
+                                <ul>
+                                    <li>Total <span>@Model.TongTien</span></li>
+                                </ul>
+                                <a href="javascript:void(0)">Proceed to checkout</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

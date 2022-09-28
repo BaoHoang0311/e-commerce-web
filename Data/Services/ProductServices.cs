@@ -22,7 +22,8 @@ namespace e_commerce_web.Data
                                                     .AsNoTracking()
                                                     .Include(x => x.Cat)
                                                     .Where(p => p.Active == true && p.UnitsInStock > 0)
-                                                    .OrderByDescending(x => x.DateCreated);
+                                                    .OrderByDescending(x => x.DateCreated)
+                                                    .OrderByDescending(x => x.Price);
 
             if (searchVM.keySearch != null)
             {
@@ -36,7 +37,7 @@ namespace e_commerce_web.Data
             {
                 LsProducts = LsProducts.Where(p => p.Price.Value >= searchVM.A.Value*1000 && p.Price.Value <= searchVM.B.Value*1000);
             }
-            if(searchVM.sortOrder != null)
+            if(searchVM.sortOrder == "2")
             {
                 LsProducts = LsProducts.OrderBy(x => x.Price.Value);
             }

@@ -8,8 +8,6 @@
     relProduct = ViewBag.RelatedProduct;
 
 }
-
-
 <div class="breadcrumb-area breadcrumb-height" data-bg-image="assets/images/breadcrumb/bg/1-1-1920x373.jpg">
     <div class="container h-100">
         <div class="row h-100">
@@ -60,12 +58,6 @@
                                 <li class="quantity">
                                     <div class="cart-plus-minus">
                                         <input class="cart-plus-minus-box" value="1" type="text">
-                                        <div class="dec qtybutton">
-                                            <i class="fa fa-minus"></i>
-                                        </div>
-                                        <div class="inc qtybutton">
-                                            <i class="fa fa-plus"></i>
-                                        </div>
                                     </div>
                                 </li>
                                 <li class="add-to-cart">
@@ -75,7 +67,7 @@
                             <div class="product-category text-matterhorn pb-2">
                                 <span class="title">Categories :</span>
                                 <ul>
-                                    @{ 
+                                    @{
                                         string url_1 = $"/danh-muc/{@Model.Alias}.html";
                                     }
                                     <li>
@@ -118,6 +110,8 @@
         </div>
     </div>
 </div>
+
+<!--related product-->
 <div class="product-slider-area section-space-top-95 section-space-bottom-100">
     <div class="container">
         <div class="section-title text-center pb-55">
@@ -131,9 +125,8 @@
                         <div class="swiper-wrapper">
                             @if (relProduct != null)
                             {
-                                @for (int i = 0; i < 4; i++)
+                                @foreach (var item in relProduct)
                                 {
-                                    var item = relProduct[i];
                                     string url = $"/san-pham/{item.Alias}.html";
                                     <div class="swiper-slide">
                                         <div class="product-item">

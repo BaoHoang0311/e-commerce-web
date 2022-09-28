@@ -1,6 +1,7 @@
 ﻿using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
 using e_commerce_web.Data;
+using e_commerce_web.Data.Services;
 using e_commerce_web.Extension;
 using e_commerce_web.Models;
 using Microsoft.AspNetCore.Builder;
@@ -42,6 +43,7 @@ namespace e_commerce_web
 
             services.AddScoped<ProductServices>();
             services.AddScoped<Saveimage>();
+            services.AddScoped<ShoppingCartService>();
             
             services.AddMemoryCache();
             
@@ -59,8 +61,7 @@ namespace e_commerce_web
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
-                //options.Cookie.Name = "e_commerce_UserLoginCookie";
-                options.Cookie.Name = "abc";
+                options.Cookie.Name = "e_commerce_UserLoginCookie";
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;

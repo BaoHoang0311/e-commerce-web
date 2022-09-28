@@ -93,7 +93,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
         }
 
         // GET: Admin/Customers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
             {
@@ -163,7 +163,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
         // POST: Admin/Customers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var customer = await _context.Customers.FindAsync(id);
             _context.Customers.Remove(customer);

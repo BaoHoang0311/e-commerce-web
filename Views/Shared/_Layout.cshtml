@@ -50,7 +50,7 @@
                                 <div class="header-right">
                                     <ul>
                                         <li class="dropdown d-none d-md-block">
-                                            <partial name="_Identity.cshtml" >
+                                            <partial name="_Identity.cshtml">
                                         </li>
                                         <li class="d-block d-lg-none">
                                             <a href="#searchBar" class="search-btn toolbar-btn">
@@ -58,10 +58,14 @@
                                             </a>
                                         </li>
                                         <li class="minicart-wrap me-3 me-lg-0">
+
                                             <a href="#miniCart" class="minicart-btn toolbar-btn">
                                                 <i class="pe-7s-shopbag"></i>
-                                                <span class="quantity">3</span>
+                                                <span class="quantity" id="countCart"></span>
                                             </a>
+                                            <div id="partialDiv">
+                                               @await Component.InvokeAsync("ShoppingCartCP")
+                                            </div>
                                         </li>
                                         <li class="mobile-menu_wrap d-block d-lg-none">
                                             <a href="#mobileMenu" class="mobile-menu_btn toolbar-btn pl-0">
@@ -296,6 +300,23 @@
     @await RenderSectionAsync("Scripts", required: false)
     @await Component.InvokeAsync("Notyf")
 
-
+    <script>
+        // ko reload page
+        function getProduct(product_id) {
+            /*       alert(product_id); //testing purposes..*/
+            $.ajax({
+                type: 'POST',
+                method: "GET",
+                url: 'Cart/AddToCart',
+                data:
+                {
+                    ProductID: product_id
+                },
+                success: function (data) {
+                    $("#partialDiv").load("/Cart/GetPartial");
+                },
+            });
+        }
+    </script>
 </body>
 </html>

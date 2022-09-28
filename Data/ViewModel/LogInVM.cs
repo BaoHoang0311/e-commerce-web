@@ -16,7 +16,6 @@ namespace e_commerce_web.Data.ViewModel
         
         [Display(Name = "Nhập Mật khẩu")]
         [Required(ErrorMessage = "Vui lòng nhập")]
-        [MinLength(5, ErrorMessage = "Nhấp tối thiểu 5 ký tự")]
         public string Password { get; set; }
     }
 }

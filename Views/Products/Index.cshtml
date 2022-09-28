@@ -55,7 +55,14 @@
                         <li class="short">
                             <select class="nice-select wide rounded-0" id="catID">
                                 <option value="1">Sort by High Price</option>
-                                <option value="2">Sort by Low Price</option>
+                                @if (ViewBag.SortPrice == "2")
+                                {
+                                    <option value="2" selected>Sort by Low Price</option>
+                                }
+                                else
+                                {
+                                    <option value="2">Sort by Low Price</option>
+                                }
                             </select>
                         </li>
                     </ul>
@@ -77,9 +84,7 @@
                                                 <div class="product-add-action">
                                                     <ul>
                                                         <li>
-                                                            <a href="cart.html">
-                                                                <i class="pe-7s-cart"></i>
-                                                            </a>
+                                                            <a onclick="getProduct(@item.ProductId)"><i class="pe-7s-cart"></i></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -103,7 +108,8 @@
                 <div class="pagination-area pt-10">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-center">
-                            <pager class="pager-container" list="@Model"
+                            <pager class="pager-container"
+                                   list="@Model"
                                    options="@PagedListRenderOptions.Bootstrap4PageNumbersPlusPrevAndNext"
                                    asp-action="Index"
                                    asp-controller="Products"
@@ -126,13 +132,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css" />
     <!--Plugin JavaScript file-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
+
     <script>
         // checkbox check 1 cái
         $('input[type="checkbox"]').on('change', function () {
             $('input[type="checkbox"]').not(this).prop('checked', false);
         });
 
-            // price slider
+        // price slider
         var $range = $(".js-range-slider"),
                 $inputFrom = $(".js-input-from"),
                 $inputTo = $(".js-input-to"),
@@ -194,6 +201,7 @@
     </script>
 
     <script>
+        // #catID: Sort Price
         $("#catID").on('change', function () {
             var strkeyword = $('#LS').val();
 
@@ -206,25 +214,40 @@
                 type: "Get",
                 url: 'Products/Filter',
                 data: {
-                    SortPrice : catid,
+                    SortPrice: catid,
                     keyword: strkeyword,
-                    LeftCat : Cat1,
+                    LeftCat: Cat1,
                 },
                 datatype: "json",
                 async: true,
-                success: function (results)
-                {
+                success: function (results) {
                     if (results.status == "success") {
                         window.location.href = results.redirectUrl;
                     }
                     // do something with response
                 },
-                error: function (response)
-                {
+                error: function (response) {
                     // do something with response
                 }
             });
-
         });
+    </script>
+
+    <script>
+        // click add cart
+        function getProduct(product_id) {
+            /*       alert(product_id); //testing purposes..*/
+            $.ajax({
+                type: 'POST',
+                url: 'Cart/AddToCart',
+                data:
+                {
+                    ProductID: product_id
+                },
+                success: function (results) {
+                    //alert(results.status);
+                },
+            });
+        }
     </script>
 }

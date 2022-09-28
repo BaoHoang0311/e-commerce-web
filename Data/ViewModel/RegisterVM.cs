@@ -31,13 +31,13 @@ namespace e_commerce_web.Data.ViewModel
         public string Phone { get; set; }
 
  
-        [MinLength(5, ErrorMessage = "Bạn cần đặt mật khẩu tôi thiểu 5 char")]
+        [MinLength(3, ErrorMessage = "Bạn cần đặt mật khẩu tôi thiểu 5 char")]
         [Display(Name = "nhập mật khẩu")]
         [Required(ErrorMessage = "Vui nhập mật khẩu")]
         public string Password { get; set; }
 
 
-        [MinLength(5, ErrorMessage = "Bạn cần đặt mật khẩu tôi thiểu 5 char")]
+        [MinLength(3, ErrorMessage = "Bạn cần đặt mật khẩu tôi thiểu 5 char")]
         [Display(Name = "nhập lại mật khẩu")]
         [Required(ErrorMessage = "Vui lòng nhập confirm mật khẩu")]
         [Compare("Password", ErrorMessage ="Mật khẩu không khớp")]
