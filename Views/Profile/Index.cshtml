@@ -1,7 +1,7 @@
 ﻿@model e_commerce_web.Data.ViewModel.ProfileVM
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Profile";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -83,7 +83,7 @@
                     <div class="tab-pane fade " id="account-orders" role="tabpanel" aria-labelledby="account-orders-tab">
                         <div class="myaccount-orders">
                             <h4 class="small-title">Danh sách đơn hàng</h4>
-                            <partial name="/Views/Profile/_DonHangPartialView.cshtml" />
+                            @await Html.PartialAsync("_DonHangPartialView",Model.OrderList) 
                         </div>
                     </div>
                     <div class="tab-pane fade show active" id="account-address" role="tabpanel" aria-labelledby="account-address-tab">

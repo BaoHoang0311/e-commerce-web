@@ -8,7 +8,12 @@ namespace e_commerce_web.Data.ViewModel
 {
     public class ProfileVM
     {
+        public ProfileVM()
+        {
+            OrderList = new();
+        }
         public Customer customer { get; set; }
         public ChangePasswordVM changepass { get; set; }
+        public List<Order> OrderList { get; set; }
     }
 }

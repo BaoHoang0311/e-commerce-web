@@ -45,6 +45,16 @@ namespace e_commerce_web.Controllers
             var listshopping = GioHang;
             return View(listshopping);
         }
+        //update giỏ hàng ko cần f5
+        public IActionResult GetComponentGioHang()
+        {
+            return ViewComponent("ShoppingCartCP");
+        }
+        //update list Cart ko cần f5
+        public IActionResult GetComponentListCart()
+        {
+            return ViewComponent("ListCart");
+        }
         // (+) sản phẩm
         public IActionResult AddToCart(int ProductID, int? ammount)
         {
@@ -59,76 +69,31 @@ namespace e_commerce_web.Controllers
             _notifyService.Success("Sản Phẩm thêm vào giỏ hàng thành công");
             return Json(new { status = "success" });
         }
-        public IActionResult GetComponent()
+        public IActionResult UpdateCart(int ProductID, int? ammount)
         {
-            return ViewComponent("ShoppingCartCP");
+            ListCartItemVM listcartVM = new();
+            listcartVM = _services.Cong_SP(ProductID, ammount, GioHang);
+            if (listcartVM == null)
+            {
+                _notifyService.Warning("Sản Phẩm ko tồn tại");
+                return RedirectToAction("Index", "ShoppingCart");
+            }
+            HttpContext.Session.Set("GioHang", listcartVM);
+            return Json(new { status = "success" });
         }
-        //public IActionResult RemoveToCart(int ProductID, int? ammount)
-        //{
-        //    listcart = GioHang;
-        //    CartItemVM item = new();
-        //    // tìm sp có trong giỏ hàng chưa
-        //    item = GioHang.SingleOrDefault(p => p.sanpham.ProductId == ProductID);
-        //    if (item != null) // có rồi -> cập nhập số lượng
-        //    {
-        //        // nếu Addcart có số lượng thì thêm + với với lượng hiện tại
-        //        if (ammount.HasValue)
-        //        {
-        //            item.amount += ammount.Value;
-        //        }
-        //        // nếu Addcart không có số lượng ( theo dấu (+) )
-        //        else
-        //        {
-        //            item.amount++;
-        //        }
-        //    }
-        //    else // chưa có
-        //    {
-        //        Product product = _context.Products.SingleOrDefault(p => p.ProductId == ProductID);
-        //        if (product == null)
-        //        {
-        //            _notifyService.Warning("Sản Phẩm ko tồn tại");
-        //        }
-        //        else
-        //        {
-        //            item.sanpham = product;
-        //            // số lượng
-        //            // nếu Addcart có số lượng thì thêm + với với lượng hiện tại
-        //            if (ammount.HasValue)
-        //            {
-        //                item.amount = ammount.Value;
-        //            }
-        //            // nếu Addcart không có số lượng ( theo dấu (+) )
-        //            else
-        //            {
-        //                item.amount = 1;
-        //            }
-        //            item.TongTien = item.Total();
-        //        }
-        //        listcart.Add(item);
-        //    }
-        //    HttpContext.Session.Set("GioHang", listcart);
-        //    return RedirectToAction("Index", "ShoppingCart");
-        //}
-        //public IActionResult ClearCart(int ProductID)
-        //{
-        //    HttpContext.Session.Remove("GioHang");
-        //    return RedirectToAction("Index");
-        //}
-        //// xóa luôn sản phẩm
-        //public IActionResult Remove(int ProductID)
-        //{
-        //    listcart = GioHang;
-        //    CartItemVM item = new();
-
-        //    // tìm sp có trong giỏ hàng chưa
-        //    item = GioHang.SingleOrDefault(p => p.sanpham.ProductId == ProductID);
-
-        //    if (item != null) listcart.Remove(item);
-
-        //    // lưu lại session
-        //    HttpContext.Session.Set("GioHang", listcart);
-        //    return View();
-        //}
+        public IActionResult RemoveCartItem(int ProductID, int? ammount)
+        {
+            ListCartItemVM listcartVM = new();
+            listcartVM = _services.RemoveCartItem(ProductID, ammount, GioHang);
+            if (listcartVM.ListCart.Count == 0 && listcartVM.TongTien == 0 )
+            {
+                _notifyService.Warning("Giỏ hàng rỗng");
+                HttpContext.Session.Set("GioHang", listcartVM);
+                return Json(new { status = "success" });
+            }
+            HttpContext.Session.Set("GioHang", listcartVM);
+            _notifyService.Success("Remove 1 sản phẩm thành công");
+            return Json(new { status = "success" });
+        }
     }
 }

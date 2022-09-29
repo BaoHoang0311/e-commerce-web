@@ -58,14 +58,12 @@
                                             </a>
                                         </li>
                                         <li class="minicart-wrap me-3 me-lg-0">
-
-                                            <a href="#miniCart" class="minicart-btn toolbar-btn">
-                                                <i class="pe-7s-shopbag"></i>
-                                                <span class="quantity" id="countCart"></span>
+                                            <a asp-controller="Cart" asp-action="Index" >
+                                                <div id="partialDiv">
+                                                        @await Component.InvokeAsync("ShoppingCartCP")
+                                                </div>
                                             </a>
-                                            <div id="partialDiv">
-                                               @await Component.InvokeAsync("ShoppingCartCP")
-                                            </div>
+
                                         </li>
                                         <li class="mobile-menu_wrap d-block d-lg-none">
                                             <a href="#mobileMenu" class="mobile-menu_btn toolbar-btn pl-0">
@@ -175,7 +173,7 @@
                                     </li>
 
                                     <li>
-                                        <a href="contact.html">
+                                        <a href="/contact.html">
                                             <span class="mm-text">Contact</span>
                                         </a>
                                     </li>
@@ -301,19 +299,20 @@
     @await Component.InvokeAsync("Notyf")
 
     <script>
-        // ko reload page
+        // ko reload page khi f5 sản phẩm AddCart
         function getProduct(product_id) {
-            /*       alert(product_id); //testing purposes..*/
+            /*alert(product_id); //testing purposes..*/
             $.ajax({
-                type: 'POST',
                 method: "GET",
                 url: 'Cart/AddToCart',
                 data:
                 {
                     ProductID: product_id
                 },
-                success: function (data) {
-                    $("#partialDiv").load("/Cart/GetPartial");
+                success: function (results) {
+                    if (results.status == "success") {
+                        $("#partialDiv").load("/Cart/GetComponentGioHang");;
+                    }
                 },
             });
         }

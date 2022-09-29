@@ -13,6 +13,7 @@ namespace e_commerce_web.Data.Services
         public ShoppingCartService(dbMarketsContext context)
         {
             _context = context;
+            listcartitemVM = new();
         }
         public ListCartItemVM listcartitemVM { get; set; }
 
@@ -23,7 +24,6 @@ namespace e_commerce_web.Data.Services
         }
         public ListCartItemVM Cong_SP(int ProductID, int? ammount, ListCartItemVM GioHang)
         {
-            listcartitemVM = new();
             // tìm sp có trong giỏ hàng chưa
             CartItemVM cartitem = GioHang.ListCart.FirstOrDefault(p => p.sanpham.ProductId == ProductID);
             if (cartitem != null) // có rồi -> cập nhập số lượng
@@ -31,7 +31,7 @@ namespace e_commerce_web.Data.Services
                 // nếu Addcart có số lượng thì thêm + với với lượng hiện tại
                 if (ammount.HasValue)
                 {
-                    cartitem.amount += ammount.Value;
+                    cartitem.amount = ammount.Value;
                 }
                 // nếu Addcart không có số lượng ( theo dấu (+) )
                 else
@@ -63,14 +63,24 @@ namespace e_commerce_web.Data.Services
                 GioHang.ListCart.Add(cartitem);
                 cartitem.Tien = cartitem.Total();
             }
-
+            // vào cái list trên để nó thực hiện hàm tính tiền
             listcartitemVM = GioHang;
             GioHang.TongTien = TongTien();
             return GioHang;
         }
-        public List<CartItemVM> Tru_SP(int ProductID, int? ammount, List<CartItemVM> GioHang)
+        public ListCartItemVM Tru_SP(int ProductID, int? ammount, List<CartItemVM> GioHang)
         {
             return null;
+        }
+        public ListCartItemVM RemoveCartItem(int ProductID, int? ammount, ListCartItemVM GioHang)
+        {
+            // tìm sp trong giỏ hàng chưa
+            CartItemVM cartitem = GioHang.ListCart.FirstOrDefault(p => p.sanpham.ProductId == ProductID);
+            // vào cái list trên để nó thực hiện hàm tính tiền
+            GioHang.ListCart.Remove(cartitem);
+            listcartitemVM = GioHang;
+            GioHang.TongTien = TongTien();
+            return GioHang;
         }
     }
 }

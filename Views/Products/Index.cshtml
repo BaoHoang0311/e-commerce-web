@@ -232,22 +232,4 @@
             });
         });
     </script>
-
-    <script>
-        // click add cart
-        function getProduct(product_id) {
-            /*       alert(product_id); //testing purposes..*/
-            $.ajax({
-                type: 'POST',
-                url: 'Cart/AddToCart',
-                data:
-                {
-                    ProductID: product_id
-                },
-                success: function (results) {
-                    //alert(results.status);
-                },
-            });
-        }
-    </script>
 }

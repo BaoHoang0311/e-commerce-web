@@ -25,19 +25,29 @@ namespace e_commerce_web.Controllers
         }
         public IActionResult Index(string id)
         {
+
             var cus = _context.Customers.AsNoTracking()
                                         .FirstOrDefault(x => x.CustomerId == id);
+            
+             var khachhang = _context.Customers.AsNoTracking()
+                                .SingleOrDefault(x => x.CustomerId == id);
             if (cus == null)
             {
                 return RedirectToAction("Index", "Home");
             }
+            var lsDonHang = _context.Orders
+                                .Include(x => x.TransactStatus)
+                                .AsNoTracking()
+                                .Where(x => x.CustomerId == id)
+                                .OrderByDescending(x => x.OrderDate)
+                                .ToList();
             ProfileVM profile = new()
             {
                 customer = cus,
                 changepass = new ChangePasswordVM(),
+                OrderList = lsDonHang,
             };
             ViewBag.LocationId = new SelectList(_context.Locations, "LocationId", "Name");
-
             return View(profile);
         }
         [HttpPost]

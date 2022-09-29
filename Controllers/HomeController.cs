@@ -26,7 +26,7 @@ namespace e_commerce_web.Controllers
         {
             var LsProducts = _context.Products
                                         .Include(x => x.Cat)
-                                        .Where(x => x.Active == true)
+                                        .Where(x => x.Active == true && x.UnitsInStock > 0)
                                         .OrderByDescending(x => x.DateCreated);
 
             HomePageVM homepage = new()
