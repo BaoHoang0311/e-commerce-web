@@ -51,15 +51,14 @@
             else {
                 soluong = value;
             }
-            alert(productid);
-            alert(soluong);
             $.ajax({
                 url: "Cart/UpdateCart",
                 type: "POST",
                 dataType: "JSON",
                 data: {
                     ProductID: productid,
-                    ammount: soluong
+                    ammount: soluong,
+                    Detail: 0,
                 },
                 success: function (results) {
                     if (results.status == "success") {

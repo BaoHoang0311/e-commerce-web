@@ -47,6 +47,7 @@ namespace e_commerce_web.Controllers
         {
             return View();
         }
+        [Route("/checkout.html")]
         public IActionResult Privacy()
         {
             return View();

@@ -22,39 +22,47 @@ namespace e_commerce_web.Data.Services
             var total = listcartitemVM.ListCart.Select(x => x.Tien).Sum();
             return total;
         }
-        public ListCartItemVM Cong_SP(int ProductID, int? ammount, ListCartItemVM GioHang)
+        public ListCartItemVM Cong_SP(int ProductID, int? ammount, int Detail, ListCartItemVM GioHang)
         {
             // tìm sp có trong giỏ hàng chưa
             CartItemVM cartitem = GioHang.ListCart.FirstOrDefault(p => p.sanpham.ProductId == ProductID);
+
+            Product product = new();
+            product = _context.Products.FirstOrDefault(p => p.ProductId == ProductID);
+
             if (cartitem != null) // có rồi -> cập nhập số lượng
             {
                 // nếu Addcart có số lượng thì thêm + với với lượng hiện tại
-                if (ammount.HasValue)
+                if (ammount.HasValue && Detail == 0)
                 {
                     cartitem.amount = ammount.Value;
+                }
+                else if( Detail == 1 )
+                {
+                    cartitem.amount += ammount.Value;
                 }
                 // nếu Addcart không có số lượng ( theo dấu (+) )
                 else
                 {
                     cartitem.amount++;
                 }
+
+                if (cartitem.amount > product.UnitsInStock) cartitem.amount = product.UnitsInStock.Value;
+
                 cartitem.Tien = cartitem.Total();
             }
             else // chưa có
             {
                 cartitem = new();
-                Product product = new();
-                product = _context.Products.FirstOrDefault(p => p.ProductId == ProductID);
+
 
                 cartitem.sanpham = product;
 
-                // số lượng
-                // nếu Addcart có số lượng thì thêm + với với lượng hiện tại
+
                 if (ammount.HasValue)
                 {
                     cartitem.amount = ammount.Value;
                 }
-                // nếu Addcart không có số lượng ( theo dấu (+) )
                 else
                 {
                     cartitem.amount = 1;
@@ -67,10 +75,6 @@ namespace e_commerce_web.Data.Services
             listcartitemVM = GioHang;
             GioHang.TongTien = TongTien();
             return GioHang;
-        }
-        public ListCartItemVM Tru_SP(int ProductID, int? ammount, List<CartItemVM> GioHang)
-        {
-            return null;
         }
         public ListCartItemVM RemoveCartItem(int ProductID, int? ammount, ListCartItemVM GioHang)
         {

@@ -76,13 +76,14 @@ namespace e_commerce_web.Controllers
                                                 .AsNoTracking()
                                                 .Include(x => x.Cat)
                                                 .FirstOrDefaultAsync(p => p.Alias == Alias);
+
             if (singleproduct == null)
             {
                 return View(nameof(Index));
             }
             ViewData["RelatedProduct"] = await _context.Products.AsNoTracking()
                                                 .Where(p => p.CatId == singleproduct.CatId
-                                                            && p.ProductId != singleproduct.ProductId)
+                                                 && p.ProductId != singleproduct.ProductId)
                                                 .ToListAsync();
             return View(singleproduct);
         }

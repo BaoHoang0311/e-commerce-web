@@ -56,10 +56,10 @@ namespace e_commerce_web.Controllers
             return ViewComponent("ListCart");
         }
         // (+) sản phẩm
-        public IActionResult AddToCart(int ProductID, int? ammount)
+        public IActionResult AddToCart(int ProductID, int? ammount,int Detail)
         {
             ListCartItemVM listcartVM = new();
-            listcartVM = _services.Cong_SP(ProductID, ammount, GioHang);
+            listcartVM = _services.Cong_SP(ProductID, ammount, Detail, GioHang);
             if (listcartVM== null)
             {
                 _notifyService.Warning("Sản Phẩm ko tồn tại");
@@ -69,10 +69,10 @@ namespace e_commerce_web.Controllers
             _notifyService.Success("Sản Phẩm thêm vào giỏ hàng thành công");
             return Json(new { status = "success" });
         }
-        public IActionResult UpdateCart(int ProductID, int? ammount)
+        public IActionResult UpdateCart(int ProductID, int? ammount, int Detail)
         {
             ListCartItemVM listcartVM = new();
-            listcartVM = _services.Cong_SP(ProductID, ammount, GioHang);
+            listcartVM = _services.Cong_SP(ProductID, ammount, Detail, GioHang);
             if (listcartVM == null)
             {
                 _notifyService.Warning("Sản Phẩm ko tồn tại");

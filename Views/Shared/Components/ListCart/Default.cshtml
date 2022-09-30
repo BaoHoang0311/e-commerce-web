@@ -27,7 +27,7 @@
                                     <tr>
                                         <td class="product_remove">
                                             <a onclick="RemoveProduct(@item.sanpham.ProductId)">
-                                                <i class="pe-7s-close" title="Remove"></i>
+                                                <i class="pe-7s-close" style="background-color: red;" title="Remove"></i>
                                             </a>
                                         </td>
                                         <td class="product-thumbnail">
@@ -65,6 +65,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="col-md-5 ml-auto">
                             <div class="cart-page-total">
@@ -72,10 +73,18 @@
                                 <ul>
                                     <li>Total <span>@Model.TongTien</span></li>
                                 </ul>
-                                <a href="javascript:void(0)">Proceed to checkout</a>
+                                @*@if (User.Identity.IsAuthenticated)
+                                {
+                                    <a asp-controller="Checkout" asp-action="Complete">Proceed to checkout</a>
+                                }
+                                else
+                                {*@
+                                    <a href="/dang-nhap.html?returnUrl=/checkout.html">zzzz</a>
+                                @* } *@
                             </div>
                         </div>
                     </div>
+
                 </form>
             }
         </div>

@@ -57,13 +57,12 @@
                                                 <i class="pe-7s-search"></i>
                                             </a>
                                         </li>
-                                        <li class="minicart-wrap me-3 me-lg-0">
+                                        <li  class="minicart-wrap me-3 me-lg-0">
                                             <a asp-controller="Cart" asp-action="Index" >
-                                                <div id="partialDiv">
-                                                        @await Component.InvokeAsync("ShoppingCartCP")
+                                                <div id="partialDiv" class="minicart-btn" >
+                                                    @await Component.InvokeAsync("ShoppingCartCP")
                                                 </div>
                                             </a>
-
                                         </li>
                                         <li class="mobile-menu_wrap d-block d-lg-none">
                                             <a href="#mobileMenu" class="mobile-menu_btn toolbar-btn pl-0">
@@ -297,23 +296,25 @@
     <partial name="/Views/Shared/PartialView/Jquery.cshtml" />
     @await RenderSectionAsync("Scripts", required: false)
     @await Component.InvokeAsync("Notyf")
-
     <script>
         // ko reload page khi f5 sản phẩm AddCart
         function getProduct(product_id) {
-            /*alert(product_id); //testing purposes..*/
             $.ajax({
-                method: "GET",
-                url: 'Cart/AddToCart',
+                method: "Get",
+                url: '/Cart/AddToCart',
                 data:
                 {
-                    ProductID: product_id
+                    ProductID: product_id,
+                    Detail: 0,
                 },
                 success: function (results) {
                     if (results.status == "success") {
-                        $("#partialDiv").load("/Cart/GetComponentGioHang");;
+                        $("#partialDiv").load("/Cart/GetComponentGioHang");
                     }
                 },
+                error: function (xhr) {
+                    alert('error');
+                }
             });
         }
     </script>
