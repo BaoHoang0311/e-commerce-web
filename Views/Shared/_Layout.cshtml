@@ -50,17 +50,18 @@
                                 <div class="header-right">
                                     <ul>
                                         <li class="dropdown d-none d-md-block">
-                                            <partial name="_Identity.cshtml" >
+                                            <partial name="_Identity.cshtml">
                                         </li>
                                         <li class="d-block d-lg-none">
                                             <a href="#searchBar" class="search-btn toolbar-btn">
                                                 <i class="pe-7s-search"></i>
                                             </a>
                                         </li>
-                                        <li class="minicart-wrap me-3 me-lg-0">
-                                            <a href="#miniCart" class="minicart-btn toolbar-btn">
-                                                <i class="pe-7s-shopbag"></i>
-                                                <span class="quantity">3</span>
+                                        <li  class="minicart-wrap me-3 me-lg-0">
+                                            <a asp-controller="Cart" asp-action="Index" >
+                                                <div id="partialDiv" class="minicart-btn" >
+                                                    @await Component.InvokeAsync("ShoppingCartCP")
+                                                </div>
                                             </a>
                                         </li>
                                         <li class="mobile-menu_wrap d-block d-lg-none">
@@ -171,7 +172,7 @@
                                     </li>
 
                                     <li>
-                                        <a href="contact.html">
+                                        <a href="/contact.html">
                                             <span class="mm-text">Contact</span>
                                         </a>
                                     </li>
@@ -295,7 +296,27 @@
     <partial name="/Views/Shared/PartialView/Jquery.cshtml" />
     @await RenderSectionAsync("Scripts", required: false)
     @await Component.InvokeAsync("Notyf")
-
-
+    <script>
+        // ko reload page khi f5 sản phẩm AddCart
+        function getProduct(product_id) {
+            $.ajax({
+                method: "Get",
+                url: '/Cart/AddToCart',
+                data:
+                {
+                    ProductID: product_id,
+                    Detail: 0,
+                },
+                success: function (results) {
+                    if (results.status == "success") {
+                        $("#partialDiv").load("/Cart/GetComponentGioHang");
+                    }
+                },
+                error: function (xhr) {
+                    alert('error');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

@@ -1,0 +1,76 @@
+﻿@model e_commerce_web.Data.ViewModel.ListCartItemVM
+@{
+    ViewData["Title"] = "Cart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-lg-12">
+    <div class="breadcrumb-item">
+        <h2 class="breadcrumb-heading">Giỏ hàng</h2>
+        <ul>
+            <li>
+                <a asp-controller="Products" asp-action="Index">Trang Sản phẩm<i class="pe-7s-angle-right"></i></a>
+            </li>
+            <li>Cart</li>
+        </ul>
+    </div>
+</div>
+
+<div class="cart-area section-space-y-axis-50" id="partialDiv2">
+    @await Component.InvokeAsync("ListCart")
+</div>
+@section Scripts{
+    <script>
+        // remove ko reload page
+        function RemoveProduct(product_id) {
+            $.ajax({
+                method: "GET",
+                url: 'Cart/RemoveCartItem',
+                data:
+                {
+                    ProductID: product_id
+                },
+                success: function (results) {
+                    if (results.status == "success") {
+                        $("#partialDiv2").load("/Cart/GetComponentListCart");
+                        $("#partialDiv").load("/Cart/GetComponentGioHang");;
+                    }
+                },
+            });
+        }
+    </script>
+    <script>
+        function aaa(productid, value, min, max) {
+            var soluong = 1;
+            if (parseInt(value) < min || isNaN(parseInt(value))) {
+                soluong = min;
+            }
+            else if (parseInt(value) > max) {
+                soluong = max;
+            }
+            else {
+                soluong = value;
+            }
+            $.ajax({
+                url: "Cart/UpdateCart",
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    ProductID: productid,
+                    ammount: soluong,
+                    Detail: 0,
+                },
+                success: function (results) {
+                    if (results.status == "success") {
+                        $("#partialDiv2").load("/Cart/GetComponentListCart");
+                        $("#partialDiv").load("/Cart/GetComponentGioHang");
+                    }
+                },
+                error: function (rs) {
+                    alert("Cập nhật Cart Error !")
+                }
+            })
+            return soluong;
+        }
+    </script>
+}

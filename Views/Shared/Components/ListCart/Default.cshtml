@@ -1,0 +1,94 @@
+﻿@model e_commerce_web.Data.ViewModel.ListCartItemVM
+
+@{
+}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            @if (Model != null)
+            {
+                <form action="javascript:void(0)">
+                    <div class="table-content table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="product_remove">remove</th>
+                                    <th class="product-thumbnail">images</th>
+                                    <th class="cart-product-name">Product</th>
+                                    <th class="product-price">Unit Price</th>
+                                    <th class="product-quantity">Quantity</th>
+                                    <th class="product-subtotal">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="partialDiv2">
+
+                                @foreach (var item in Model.ListCart)
+                                {
+                                    string url = $"/san-pham/{@item.sanpham.Alias}.html";
+                                    <tr>
+                                        <td class="product_remove">
+                                            <a onclick="RemoveProduct(@item.sanpham.ProductId)">
+                                                <i class="pe-7s-close" style="background-color: red;" title="Remove"></i>
+                                            </a>
+                                        </td>
+                                        <td class="product-thumbnail">
+                                            <a href="@url">
+                                                <img src="@item.sanpham.Thumb" style="width:100px;height:50px" alt="Cart Thumbnail">
+                                            </a>
+                                        </td>
+                                        <td class="product-name"><a href="@url">@item.sanpham.ProductName</a></td>
+                                        <td class="product-price"><span class="amount">@item.sanpham.Price</span></td>
+                                        <td class="quantity">
+                                            <div>
+                                                <input class="cartItem"
+                                                       data-dongia="@item.sanpham.Price"
+                                                       data-mahh="@item.sanpham.ProductId"
+                                                       min="1"
+                                                       max="@item.sanpham.UnitsInStock"
+                                                       value="@item.amount"
+                                                       onchange="this.value = aaa(@item.sanpham.ProductId, this.value ,1 ,@item.sanpham.UnitsInStock )"
+                                                       type="number">
+                                            </div>
+                                        </td>
+                                        <td class="product-subtotal"><span class="amount">@item.Total()</span></td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="coupon-all">
+                                <div class="coupon2">
+                                    <a class="button" asp-controller="Products" asp-action="Index">Tiếp tục mua sắm</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-5 ml-auto">
+                            <div class="cart-page-total">
+                                <h2>Cart totals</h2>
+                                <ul>
+                                    <li>Total <span>@Model.TongTien</span></li>
+                                </ul>
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <a asp-controller="Checkout" asp-action="Index">Proceed to checkout</a>
+                                }
+                                else
+                                {
+                                    <a href="/dang-nhap.html?returnUrl=/checkout.html" class="btn btn-secondary btn-primary-hover">Thanh toán</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            }
+        </div>
+
+    </div>
+</div>

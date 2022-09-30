@@ -99,12 +99,13 @@ namespace e_commerce_web.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            ViewBag.ReturnUrl = returnUrl;
+            ViewBag.returnUrl = returnUrl;
             return View();
         }
         [HttpPost]
+        [AllowAnonymous]
         [Route("/dang-nhap.html")]
-        public async Task<IActionResult> Login(LogInVM dangnhap)
+        public async Task<IActionResult> Login(LogInVM dangnhap, string returnUrl )
         {
             try
             {
@@ -132,7 +133,14 @@ namespace e_commerce_web.Controllers
                 ClaimsIdentity grandmaIdentity = new ClaimsIdentity(USERCLAIM, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(new ClaimsPrincipal(grandmaIdentity));
                 _notifyService.Success("Bạn đăng nhập thành công");
-                return RedirectToAction("Index", "Home");
+                if(returnUrl == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    return Redirect(returnUrl);
+                }
             }
             catch
             {
@@ -144,6 +152,7 @@ namespace e_commerce_web.Controllers
         public async Task<IActionResult> Logout()
         {
             HttpContext.Session.Remove("KhachHang_Ma");
+            HttpContext.Session.Remove("GioHang");
             await HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }

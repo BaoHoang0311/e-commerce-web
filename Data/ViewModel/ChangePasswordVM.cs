@@ -13,9 +13,11 @@ namespace e_commerce_web.Data.ViewModel
         public string Passsword { get; set; } = null;
 
         [Required]
+        [MinLength(3, ErrorMessage = "Nhấp tối thiểu 5 ký tự")]
         public string NewPassword { get; set; } = null;
 
         [Required]
+        [MinLength(3, ErrorMessage = "Nhấp tối thiểu 5 ký tự")]
         [Compare("NewPassword", ErrorMessage = "Mật khẩu không khớp")]
         public string ConfirmNewPassword { get; set; } = null;
     }

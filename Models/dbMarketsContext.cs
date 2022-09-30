@@ -35,7 +35,9 @@ namespace e_commerce_web.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-
+            if (!optionsBuilder.IsConfigured)
+            {
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -81,6 +83,8 @@ namespace e_commerce_web.Models
                 entity.Property(e => e.AttributesPriceId).HasColumnName("AttributesPriceID");
 
                 entity.Property(e => e.AttributeId).HasColumnName("AttributeID");
+
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 0)");
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
 
@@ -176,6 +180,8 @@ namespace e_commerce_web.Models
 
                 entity.Property(e => e.ShipDate).HasColumnType("datetime");
 
+                entity.Property(e => e.TotalMoney).HasColumnType("decimal(18, 0)");
+
                 entity.Property(e => e.TransactStatusId).HasColumnName("TransactStatusID");
 
                 entity.HasOne(d => d.Customer)
@@ -197,9 +203,15 @@ namespace e_commerce_web.Models
 
                 entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
+                entity.Property(e => e.Discount).HasColumnType("decimal(18, 0)");
+
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
 
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 0)");
+
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
+
+                entity.Property(e => e.TotalMoney).HasColumnType("decimal(18, 0)");
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderDetails)
