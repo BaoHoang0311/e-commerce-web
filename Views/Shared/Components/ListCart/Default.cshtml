@@ -1,6 +1,7 @@
 ﻿@model e_commerce_web.Data.ViewModel.ListCartItemVM
 
-
+@{
+}
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -73,14 +74,14 @@
                                 <ul>
                                     <li>Total <span>@Model.TongTien</span></li>
                                 </ul>
-                                @*@if (User.Identity.IsAuthenticated)
+                                @if (User.Identity.IsAuthenticated)
                                 {
-                                    <a asp-controller="Checkout" asp-action="Complete">Proceed to checkout</a>
+                                    <a asp-controller="Checkout" asp-action="Index">Proceed to checkout</a>
                                 }
                                 else
-                                {*@
-                                    <a href="/dang-nhap.html?returnUrl=/checkout.html">zzzz</a>
-                                @* } *@
+                                {
+                                    <a href="/dang-nhap.html?returnUrl=/checkout.html" class="btn btn-secondary btn-primary-hover">Thanh toán</a>
+                                }
                             </div>
                         </div>
                     </div>
