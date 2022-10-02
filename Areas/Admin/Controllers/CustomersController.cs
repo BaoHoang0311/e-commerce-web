@@ -69,7 +69,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
         // GET: Admin/Customers/Create
         public IActionResult Create()
         {
-            ViewBag.Location = new SelectList(_context.Locations, "LocationId", "NameWithType");
+            ViewBag.Location = new SelectList(_context.Locations.Where(x=>x.Parent==0), "LocationId", "NameWithType");
             return View();
         }
 
@@ -101,7 +101,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
             }
 
             var customer = await _context.Customers.FindAsync(id);
-            ViewBag.Location = new SelectList(_context.Locations, "LocationId", "NameWithType", customer.LocationId);
+            ViewBag.Location = new SelectList(_context.Locations.Where(x => x.Parent == 0), "LocationId", "NameWithType", customer.LocationId);
             if (customer == null)
             {
                 return NotFound();
