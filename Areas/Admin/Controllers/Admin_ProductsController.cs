@@ -60,7 +60,8 @@ namespace e_commerce_web.Areas.Admin.Controllers
         public IActionResult Sort(string sortOrder, int? CatId, string keySearch)
         {
             ViewBag.ID = string.IsNullOrEmpty(sortOrder) ? "abc" : "";
-            return RedirectToAction("Index", "Admin_Products", new { sortOrder = ViewBag.ID, CatId = CatId, keySearch = keySearch });
+            return RedirectToAction("Index", "Admin_Products", 
+                new { sortOrder = ViewBag.ID, CatId = CatId, keySearch = keySearch });
         }
         public IActionResult Index(string keySearch, int? page, int? CatId, string sortOrder)
         {
