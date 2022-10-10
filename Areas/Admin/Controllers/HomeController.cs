@@ -29,10 +29,6 @@ namespace e_commerce_web.Admin.Controllers
 
 
 
-//_notyfyService.Success("This is a success Notification");
-//_notyfyService.Error("This is an Error Notification");
-//_notyfyService.Warning("This is a Warning Notification");
-//_notyfyService.Information("This is an Information Notification");
-//_notyfyService.Success("This tuast will be dismissed in 10 seconds.", 10);
+
 //_notyfyService.Custom("Custom Notification - closes in 5 seconds.", 5, "whitesmoka", "ta ta-gear");
 //_notyfyService.Custom("Custom Notification closes in 5 seconds.", 10, #135224" , "fa fa-gear");
