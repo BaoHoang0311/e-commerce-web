@@ -11,11 +11,6 @@ namespace e_commerce_web.Data.ViewComponents
 {
     public class ShoppingCartCP : ViewComponent
     {
-        private readonly ShoppingCartService _shoppingcartservice;
-        public ShoppingCartCP(ShoppingCartService shoppingcartservice)
-        {
-            _shoppingcartservice = shoppingcartservice;
-        }
         // số ở giỏ hàng
         public IViewComponentResult Invoke()
         {
