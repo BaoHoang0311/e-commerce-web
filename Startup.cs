@@ -90,6 +90,7 @@ namespace e_commerce_web
 
             app.UseStaticFiles();
 
+
             app.UseRouting();
 
             app.UseSession();
