@@ -28,8 +28,11 @@ namespace e_commerce_web.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int? roleID, string Status)
         {
             ViewData["RoleName"] = new SelectList(_context.Roles.Where(x => x.RoleId == 1 || x.RoleId == 2), "RoleId", "Description");
-            
-            IQueryable<Account> dbMarketsContext = _context.Accounts.Include(a => a.Role);
+
+            IQueryable<Customer> dbMarketsContext = _context.Customers
+                                                        .Include(a => a.Role)
+                                                        .Where(m => m.Role.RoleName == "NV" 
+                                                        || m.Role.RoleName=="Admin");
             
             if(roleID != null && roleID != 0)
             {
@@ -48,16 +51,16 @@ namespace e_commerce_web.Areas.Admin.Controllers
         }
 
         // GET: Admin/Accounts/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var account = await _context.Accounts
+            var account = await _context.Customers
                 .Include(a => a.Role)
-                .FirstOrDefaultAsync(m => m.AccountId == id);
+                .FirstOrDefaultAsync(m => m.CustomerId == id);
             if (account == null)
             {
                 return NotFound();
@@ -78,12 +81,12 @@ namespace e_commerce_web.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AccountId,Phone,Email,Password,Active,FullName,RoleId,LastLogin,CreateDate")] Account account)
+        public async Task<IActionResult> Create([Bind("Phone,Email,Password,Active,FullName,RoleId,LastLogin,CreateDate")] Customer account)
         {
             if (ModelState.IsValid)
             {
-
                 account.CreateDate = DateTime.Now;
+                account.CustomerId = Guid.NewGuid().ToString();
                 _context.Add(account);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -100,7 +103,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var account = await _context.Accounts.FindAsync(id);
+            var account = await _context.Customers.FindAsync(id);
             if (account == null)
             {
                 return NotFound();
@@ -114,13 +117,8 @@ namespace e_commerce_web.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AccountId,Phone,Email,Password,Salt,Active,FullName,RoleId,LastLogin,CreateDate")] Account account)
+        public async Task<IActionResult> Edit(int id, [Bind("Phone,Email,Password,Active,FullName,RoleId,LastLogin,CreateDate")] Customer account)
         {
-            if (id != account.AccountId)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
@@ -130,14 +128,7 @@ namespace e_commerce_web.Areas.Admin.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AccountExists(account.AccountId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw ;
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -146,16 +137,16 @@ namespace e_commerce_web.Areas.Admin.Controllers
         }
 
         // GET: Admin/Accounts/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var account = await _context.Accounts
+            var account = await _context.Customers
                 .Include(a => a.Role)
-                .FirstOrDefaultAsync(m => m.AccountId == id);
+                .FirstOrDefaultAsync(m => m.CustomerId == id);
             if (account == null)
             {
                 return NotFound();
@@ -167,17 +158,12 @@ namespace e_commerce_web.Areas.Admin.Controllers
         // POST: Admin/Accounts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var account = await _context.Accounts.FindAsync(id);
-            _context.Accounts.Remove(account);
+            var account = await _context.Customers.FindAsync(id);
+            _context.Customers.Remove(account);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool AccountExists(int id)
-        {
-            return _context.Accounts.Any(e => e.AccountId == id);
         }
     }
 }

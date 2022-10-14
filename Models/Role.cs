@@ -10,6 +10,7 @@ namespace e_commerce_web.Models
         public Role()
         {
             Accounts = new HashSet<Account>();
+            Customers = new HashSet<Customer>();
         }
 
         public int RoleId { get; set; }
@@ -17,5 +18,6 @@ namespace e_commerce_web.Models
         public string Description { get; set; }
 
         public virtual ICollection<Account> Accounts { get; set; }
+        public virtual ICollection<Customer> Customers { get; set; }
     }
 }

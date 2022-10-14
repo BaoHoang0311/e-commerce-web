@@ -35,9 +35,6 @@ namespace e_commerce_web.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -142,11 +139,18 @@ namespace e_commerce_web.Models
                     .HasMaxLength(12)
                     .IsUnicode(false);
 
+                entity.Property(e => e.RoleId).HasColumnName("RoleID");
+
                 entity.HasOne(d => d.Location)
                     .WithMany(p => p.Customers)
                     .HasForeignKey(d => d.LocationId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Customers_Locations");
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.Customers)
+                    .HasForeignKey(d => d.RoleId)
+                    .HasConstraintName("FK_Customers_Roles");
             });
 
             modelBuilder.Entity<Location>(entity =>

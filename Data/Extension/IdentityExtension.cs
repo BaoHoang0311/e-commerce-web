@@ -24,6 +24,7 @@ namespace e_commerce_web.Extension
             var claim = identity.FindFirst(ClaimTypes.Role);
             return (claim != null) ? claim.Value : string.Empty;
         }
+        
         public static string GetSpecificClaim(this ClaimsPrincipal claimsPrincipal, string claimType)
         {
             var claim = claimsPrincipal.Claims.FirstOrDefault(x => x.Type == claimType);

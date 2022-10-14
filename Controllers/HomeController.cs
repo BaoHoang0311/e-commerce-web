@@ -56,5 +56,10 @@ namespace e_commerce_web.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        [Route("/NotFound.html")]
+        public IActionResult NOTFOUND()
+        {
+            return View("NotFound");
+        }
     }
 }

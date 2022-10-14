@@ -111,6 +111,7 @@ namespace e_commerce_web.Controllers
             {
                 var kh = _context.Customers
                                     .AsNoTracking()
+                                    .Include(m => m.Role)
                                     .FirstOrDefault(x => x.FullName == dangnhap.UserName
                                     && x.Password == dangnhap.Password);
                 if (kh == null)
@@ -129,6 +130,7 @@ namespace e_commerce_web.Controllers
                 {
                     new Claim(ClaimTypes.Name, kh.FullName),
                     new Claim("CustomerID", kh.CustomerId.ToString()),
+                    new Claim(ClaimTypes.Role, kh.Role.RoleName),
                 };
                 ClaimsIdentity grandmaIdentity = new ClaimsIdentity(USERCLAIM, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(new ClaimsPrincipal(grandmaIdentity));
@@ -187,8 +189,11 @@ namespace e_commerce_web.Controllers
                     Phone = registerVM.Phone,
                     Email = registerVM.Email,
                     Active = true,
+                    RoleId = 3,
                     CreateDate = DateTime.Now,
                 };
+                
+
                 _context.Customers.Add(cus);
                 await _context.SaveChangesAsync();
 

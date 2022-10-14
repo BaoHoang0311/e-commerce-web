@@ -37,6 +37,7 @@ namespace e_commerce_web
                     Configuration.GetConnectionString("DefaulConnectionString"));
             builder.Password = Configuration["DbPassword"];
             _connection = builder.ConnectionString;
+
             // connectionString
             services.AddDbContext<dbMarketsContext>(options =>
                 options.UseSqlServer(_connection));
@@ -57,8 +58,12 @@ namespace e_commerce_web
                 config.Position = NotyfPosition.BottomRight;
             });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdministratorRole",
+                     policy => policy.RequireRole("Admin","NV"));
+            });
             // *1
-            services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
                 options.Cookie.Name = "e_commerce_UserLoginCookie";
@@ -69,7 +74,10 @@ namespace e_commerce_web
             services.AddAuthentication("abc")
                         .AddCookie("abc", config =>
                         {
-                            config.ExpireTimeSpan = TimeSpan.FromMinutes(30); ;
+                            config.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                            config.LoginPath = "/dang-nhap.html";
+                            config.LogoutPath = "/dang-xuat.html";
+                            config.AccessDeniedPath = "/NotFound.html";
                         });
         }
 
@@ -116,11 +124,3 @@ namespace e_commerce_web
         }
     }
 }
-//services.AddAuthentication("CookieAuthentication_e_commerce")
-//            .AddCookie("CookieAuthentication_e_commerce", config =>
-//            {
-//                config.ExpireTimeSpan = TimeSpan.FromMinutes(30); ;
-//                config.LoginPath = "/dang-nhap.html";
-//                config.LogoutPath = "/dang-xuat.html";
-//                config.AccessDeniedPath = "/not-found.html";
-//            });

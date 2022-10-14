@@ -24,8 +24,10 @@ namespace e_commerce_web.Models
         public string Password { get; set; }
         public DateTime? LastLogin { get; set; }
         public bool Active { get; set; }
+        public int? RoleId { get; set; }
 
         public virtual Location Location { get; set; }
+        public virtual Role Role { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
     }
 }
