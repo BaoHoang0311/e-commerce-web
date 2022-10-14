@@ -1,4 +1,4 @@
-﻿@model IEnumerable<e_commerce_web.Models.Account>
+﻿@model IEnumerable<e_commerce_web.Models.Customer>
 
 @{
     ViewData["Title"] = "Danh Mục Account";
@@ -14,7 +14,7 @@
                 <div class="d-md-flex">
                     <div class="m-b-10 m-r-15">
                         <select class="custom-select" style="min-width: 180px;" id="roleID" asp-items="ViewBag.RoleName">
-                            <option label="LỌC THEO ROLE" ></option>
+                            <option label="LỌC THEO ROLE"></option>
                         </select>
                     </div>
                     <div class="m-b-10">
@@ -55,7 +55,7 @@
                     {
                         <tr>
                             <td>
-                                @acc.AccountId
+                                @acc.CustomerId
                             </td>
                             <td>
                                 <div class="d-flex align-items-center">
@@ -84,15 +84,15 @@
                             <td>@acc.Role.RoleName</td>
                             <td class="text-right">
                                 <a class="btn btn-icon btn-hover btn-sm btn-rounded"
-                                   href="/Admin/Accounts/Details/@acc.AccountId">
+                                   href="/Admin/Accounts/Details/@acc.CustomerId">
                                     <i class="anticon anticon-info"></i>
                                 </a>
                                 <a class="btn btn-icon btn-hover btn-sm btn-rounded pull-right"
-                                   href="/Admin/Accounts/Edit/@acc.AccountId">
+                                   href="/Admin/Accounts/Edit/@acc.CustomerId">
                                     <i class="anticon anticon-edit"></i>
                                 </a>
                                 <a class="btn btn-icon btn-hover btn-sm btn-rounded"
-                                   href="/Admin/Accounts/Delete/@acc.AccountId">
+                                   href="/Admin/Accounts/Delete/@acc.CustomerId">
                                     <i class="anticon anticon-delete"></i>
                                 </a>
 
@@ -106,7 +106,7 @@
 </div>
 
 
-@section Scripts_Admin {
+@section  Scripts_Admin{
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -133,7 +133,7 @@
                 var _status = $('#status').val();
                 status = _status.toString();
 
-                if (_roleID == "" ) {
+                if (_roleID == "") {
                     var qsp = 'roleID';
                     roleid = getUrlParameter(qsp);
                 }
@@ -149,7 +149,7 @@
                     datatype: "json",
                     data: {
                         roleID: roleid,
-                        Status :status,
+                        Status: status,
                     },
                     async: true,
                     success: function (results) {
