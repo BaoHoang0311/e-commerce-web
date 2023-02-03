@@ -10,10 +10,12 @@ using PagedList.Core;
 using e_commerce_web.Extension;
 using Microsoft.AspNetCore.Http;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace e_commerce_web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Policy = "RequireAdministratorRole", Roles = "Admin,NV")]
     public class Admin_ProductsController : Controller
     {
         private readonly dbMarketsContext _context;

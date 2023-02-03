@@ -93,7 +93,7 @@ namespace e_commerce_web.Controllers
         }
         [AllowAnonymous]
         [Route("/dang-nhap.html")]
-        public IActionResult Login(string returnUrl = null)
+        public IActionResult Login(string returnUrl)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -105,7 +105,7 @@ namespace e_commerce_web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("/dang-nhap.html")]
-        public async Task<IActionResult> Login(LogInVM dangnhap, string returnUrl )
+        public async Task<IActionResult> Login(LogInVM dangnhap, string returnUrl)
         {
             try
             {
@@ -123,7 +123,8 @@ namespace e_commerce_web.Controllers
                 kh.LastLogin = DateTime.Now;
                 _context.Customers.Update(kh);
                 _context.SaveChanges();
-                // Lưu session
+                // Lưu session 
+                // Settring Default
                 HttpContext.Session.SetString("KhachHang_Ma", kh.CustomerId);
                 // Identity
                 var USERCLAIM = new List<Claim>
@@ -134,8 +135,9 @@ namespace e_commerce_web.Controllers
                 };
                 ClaimsIdentity grandmaIdentity = new ClaimsIdentity(USERCLAIM, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(new ClaimsPrincipal(grandmaIdentity));
-                _notifyService.Success("Bạn đăng nhập thành công");
-                if(returnUrl == null)
+
+                _notifyService.Success("Bạn đã đăng nhập thành công");
+                if (returnUrl == null)
                 {
                     return RedirectToAction("Index", "Home");
                 }
@@ -192,7 +194,7 @@ namespace e_commerce_web.Controllers
                     RoleId = 3,
                     CreateDate = DateTime.Now,
                 };
-                
+
 
                 _context.Customers.Add(cus);
                 await _context.SaveChangesAsync();

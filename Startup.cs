@@ -60,8 +60,7 @@ namespace e_commerce_web
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("RequireAdministratorRole",
-                     policy => policy.RequireRole("Admin","NV"));
+                options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Admin", "NV"));
             });
             // *1
             services.AddSession(options =>
@@ -98,6 +97,7 @@ namespace e_commerce_web
 
             app.UseStaticFiles();
 
+            // Quicksort + MergeSort
 
             app.UseRouting();
 

@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using e_commerce_web.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace e_commerce_web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Policy = "RequireAdministratorRole", Roles = "Admin")]
     public class AccountsController : Controller
     {
         private readonly dbMarketsContext _context;

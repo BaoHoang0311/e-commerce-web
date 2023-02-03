@@ -57,9 +57,9 @@
                                                 <i class="pe-7s-search"></i>
                                             </a>
                                         </li>
-                                        <li  class="minicart-wrap me-3 me-lg-0">
-                                            <a asp-controller="Cart" asp-action="Index" >
-                                                <div id="partialDiv" class="minicart-btn" >
+                                        <li class="minicart-wrap me-3 me-lg-0">
+                                            <a asp-controller="Cart" asp-action="Index">
+                                                <div id="partialDiv" class="minicart-btn">
                                                     @await Component.InvokeAsync("ShoppingCartCP")
                                                 </div>
                                             </a>
@@ -294,10 +294,11 @@
 
     <!--Main JS (Common Activation Codes)-->
     <script src="~/Userassets/js/main.js"></script>
-     @*jquery autocomplete*@
+    @*jquery autocomplete*@
     <partial name="/Views/Shared/PartialView/Jquery.cshtml" />
     @await RenderSectionAsync("Scripts", required: false)
     @await Component.InvokeAsync("Notyf")
+
     <script>
         // ko reload page khi f5 sản phẩm AddCart
         function getProduct(product_id) {
@@ -318,6 +319,24 @@
                     alert('error');
                 }
             });
+        }
+        function getURL() {
+            $.ajax({
+                method: "Get",
+                url: '/dangnhap.html',
+                data:
+                {
+                    returnUrl: window.location.pathname,
+                },
+                success: function (results) {
+                    if (results.status == "success") {
+                        window.location.href = results.redirectUrl;
+                    }
+                },
+                error: function (xhr) {
+                    alert('error');
+                }
+            })
         }
     </script>
 </body>
