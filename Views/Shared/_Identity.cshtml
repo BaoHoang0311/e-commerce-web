@@ -17,7 +17,31 @@
     else
     {
         <li><a class="dropdown-item" asp-controller="Accounts" asp-area="" asp-action="Register">Register</a></li>
-        <li><a id="textPerson" class="dropdown-item" asp-controller="Accounts" asp-area="" asp-action="Login" onclick="getURL()">Login </a></li>
+        <li><a class="dropdown-item" asp-controller="Accounts" asp-area="" asp-action="Login" onclick="getURL()">Login </a></li>
     }
 </ul>
+<section Scripts>
+    <script>
+        function getURL() {
+            $.ajax({
+                url: "/Accounts/getLastestPage",
+                type: "Get",
+                data:
+                {
+                    returnUrl: window.location.pathname,
+                },
+                datatype: "json",
+                success: function (results) {
+                    if (results.status == "success") {
+                        let link = window.location.href;
+                        window.location.href = results.link;
+                    }
+                },
+                error: function (xhr) {
+                    alert('error');
+                }
+            });
+        }
+    </script>
+</section>
 

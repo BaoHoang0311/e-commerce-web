@@ -91,6 +91,16 @@ namespace e_commerce_web.Controllers
         {
             return View();
         }
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult getLastestPage (string returnUrl)
+        {
+            
+            var ajaxSuccess = returnUrl == "/" || returnUrl == null || returnUrl == "/dang-ky.html" 
+                                    ? Json(new { status = "success", link = $"/dang-nhap.html" })
+                                    : Json(new { status = "success", link = $"/dang-nhap.html?returnUrl={returnUrl}"});
+            return ajaxSuccess;
+        }
         [AllowAnonymous]
         [Route("/dang-nhap.html")]
         public IActionResult Login(string returnUrl)
@@ -99,7 +109,6 @@ namespace e_commerce_web.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            ViewBag.returnUrl = returnUrl;
             return View();
         }
         [HttpPost]
@@ -109,16 +118,27 @@ namespace e_commerce_web.Controllers
         {
             try
             {
-                var kh = _context.Customers
-                                    .AsNoTracking()
-                                    .Include(m => m.Role)
-                                    .FirstOrDefault(x => x.FullName == dangnhap.UserName
-                                    && x.Password == dangnhap.Password);
+                var kh = _context.Customers.AsNoTracking()
+                                            .Include(m => m.Role)
+                                            .FirstOrDefault(x => x.FullName == dangnhap.UserName
+                                            && x.Password == dangnhap.Password);
+
+                var ajaxSuccess = returnUrl == "/" || returnUrl== null 
+                                                ? Json(new { status = "success", link = $"/dang-nhap.html" })
+                                                : Json(new { status = "success", link = $"/dang-nhap.html?returnUrl={returnUrl}" });
                 if (kh == null)
                 {
                     _notifyService.Warning("Bạn đã nhập thông tin sai");
-                    return RedirectToAction("Login", "Accounts");
+                    return ajaxSuccess;
                 }
+                else
+                {
+                    ajaxSuccess = returnUrl == "/" || returnUrl == null
+                                                ? Json(new { status = "success", link ="" })
+                                                : Json(new { status = "success", link = returnUrl }); ;
+                }
+                
+
                 //update LastLogin
                 kh.LastLogin = DateTime.Now;
                 _context.Customers.Update(kh);
@@ -137,18 +157,13 @@ namespace e_commerce_web.Controllers
                 await HttpContext.SignInAsync(new ClaimsPrincipal(grandmaIdentity));
 
                 _notifyService.Success("Bạn đã đăng nhập thành công");
-                if (returnUrl == null)
-                {
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    return Redirect(returnUrl);
-                }
+                return ajaxSuccess;
             }
             catch
             {
-                return RedirectToAction("Login", "Accounts");
+                var ajaxSuccess = returnUrl == "/" || returnUrl == "" ? Json(new { status = "success", link = $"/dang-nhap.html" })
+                                : Json(new { status = "success", link = $"/dang-nhap.html?returnUrl={returnUrl}" });
+                return ajaxSuccess;
             }
         }
         [HttpGet]

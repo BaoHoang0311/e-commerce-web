@@ -25,7 +25,7 @@ namespace e_commerce_web.Extension
             return (claim != null) ? claim.Value : string.Empty;
         }
         
-        public static string GetSpecificClaim(this ClaimsPrincipal claimsPrincipal, string claimType)
+        public static string GetSpecificClaims(this ClaimsPrincipal claimsPrincipal, string claimType)
         {
             var claim = claimsPrincipal.Claims.FirstOrDefault(x => x.Type == claimType);
             return (claim != null) ? claim.Value : string.Empty;
