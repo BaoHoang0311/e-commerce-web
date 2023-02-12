@@ -76,7 +76,7 @@ namespace e_commerce_web.Controllers
             if (listcartVM == null)
             {
                 _notifyService.Warning("Sản Phẩm ko tồn tại");
-                return RedirectToAction("Index", "ShoppingCart");
+                return RedirectToAction("Index", "Cart");
             }
             HttpContext.Session.Set("GioHang", listcartVM);
             return Json(new { status = "success" });

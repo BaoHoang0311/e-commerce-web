@@ -320,24 +320,6 @@
                 }
             });
         }
-        function getURL() {
-            $.ajax({
-                method: "Get",
-                url: '/dangnhap.html',
-                data:
-                {
-                    returnUrl: window.location.pathname,
-                },
-                success: function (results) {
-                    if (results.status == "success") {
-                        window.location.href = results.redirectUrl;
-                    }
-                },
-                error: function (xhr) {
-                    alert('error');
-                }
-            })
-        }
     </script>
 </body>
 </html>
