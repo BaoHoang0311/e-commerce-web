@@ -9,7 +9,14 @@
 </button>
 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingButton">
 
-    @if (User.Identity.IsAuthenticated)
+    @if (User.IsInRole("Admin") || User.IsInRole("NV"))
+    {
+
+        <li><a class="dropdown-item" asp-controller="Home" asp-area="Admin" asp-action="Index">TrangAdmin</a></li>
+        <li><a class="dropdown-item" asp-controller="Profile" asp-area="" asp-action="Index" asp-route-id="@User.GetSpecificClaims("CustomerID")">MyAccount</a></li>
+        <li><a id="textPerson" class="dropdown-item" asp-controller="Accounts" asp-area="" asp-action="Logout">Logout</a></li>
+    }
+    else if (User.Identity.IsAuthenticated)
     {
         <li><a class="dropdown-item" asp-controller="Profile" asp-area="" asp-action="Index" asp-route-id="@User.GetSpecificClaims("CustomerID")">MyAccount</a></li>
         <li><a id="textPerson" class="dropdown-item" asp-controller="Accounts" asp-area="" asp-action="Logout">Logout</a></li>

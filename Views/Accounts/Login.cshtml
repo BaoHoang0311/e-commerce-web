@@ -26,11 +26,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 pt-5 float">
+                    <div class="col-md-6 pt-5">
                         <button onclick="getURL1()" class="btn btn-custom-size lg-size btn-secondary btn-primary-hover rounded-0">LogIn</button>
-                        <a class="btn btn-custom-size lg-size btn-secondary btn-primary-hover rounded-0" asp-action="Index" asp-controller="Home" asp-area="">Back to Home</a>
                     </div>
                     <div class="col-md-6 pt-5">
+                        <a class="btn btn-custom-size lg-size btn-secondary btn-primary-hover rounded-0 ml-auto" asp-action="Index" asp-controller="Home" asp-area="">Back to Home</a>
                     </div>
                 </form>
             </div>
@@ -39,7 +39,7 @@
 </div>
 
 
-@section Scripts{
+@section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js" integrity="sha512-rstIgDs0xPgmG6RX1Aba4KV5cWJbAMcvRCVmglpam9SoHZiUCyQVDdH2LPlxoHtrv17XWblE/V/PP+Tr04hbtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js" integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -47,10 +47,10 @@
         $(document).ready(function () {
             $.validator.unobtrusive.parse($("#form"));
         })
-
         function getURL1() {
             if ($("#form").valid()) {
                 let url = window.location.href;
+                //alert(url);
                 let z = url.split('=')[1];
                 //alert(z);
                 let formData = $("#form").serialize();
@@ -66,8 +66,10 @@
                     datatype: "json",
                     success: function (results) {
                         if (results.status == "success") {
-                            let link = window.location.href;
-                            window.location.href = results.link;
+                            window.location.href = results.link ;
+                        }
+                        else {
+                            window.location.href = "dntb.html";
                         }
                     },
                     error: function (xhr) {
@@ -76,6 +78,5 @@
                 });
             }
         }
-
     </script>
 }

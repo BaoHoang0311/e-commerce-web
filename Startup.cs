@@ -63,13 +63,7 @@ namespace e_commerce_web
                 options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Admin", "NV"));
             });
             // *1
-            services.AddSession(options =>
-            {
-                options.Cookie.Name = "e_commerce_UserLoginCookie";
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
+            services.AddSession();
             services.AddAuthentication("abc")
                         .AddCookie("abc", config =>
                         {
