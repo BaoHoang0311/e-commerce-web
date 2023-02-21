@@ -91,20 +91,12 @@ namespace e_commerce_web.Controllers
         {
             return View();
         }
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult getLastestPage(string returnUrl)
-        {
-            var ajaxSuccess = returnUrl == "/" || returnUrl == null || returnUrl == "/dang-ky.html" || returnUrl == "/dang-nhap.html"
-                                    ? Json(new { status = "success", link = $"/dang-nhap.html" })
-                                    : Json(new { status = "success", link = $"/dang-nhap.html?returnUrl={returnUrl}" });
-            return ajaxSuccess;
-        }
+
         [AllowAnonymous]
         [Route("/dang-nhap.html")]
-        public IActionResult Login(string returnUrl)
+        public IActionResult Login()
         {
-            if (User.Identity.IsAuthenticated )
+            if (User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -117,59 +109,42 @@ namespace e_commerce_web.Controllers
         {
             try
             {
-                var kh = _context.Customers.AsNoTracking()
+                var kh = await _context.Customers.AsNoTracking()
                                             .Include(m => m.Role)
-                                            .FirstOrDefault(x => x.FullName == dangnhap.UserName
+                                            .FirstOrDefaultAsync(x => x.FullName == dangnhap.UserName
                                             && x.Password == dangnhap.Password);
-
-                var ajaxSuccess = returnUrl == "/" || returnUrl == null 
-                                                ? Json(new { status = "success", link = $"/dang-nhap.html" })
-                                                : Json(new { status = "success", link = $"/dang-nhap.html?returnUrl={returnUrl}" });
                 if (kh == null)
                 {
-                    ajaxSuccess = returnUrl == "/" || returnUrl == null
-                                                    ? Json(new { status = "fail", link = $"/dang-nhap.html" })
-                                                    : Json(new { status = "fail", link = $"/dang-nhap.html?returnUrl={returnUrl}" });
-                    return ajaxSuccess;
+                    _notifyService.Warning("Bạn đã nhập thông tin sai");
+                    return LocalRedirect($"/dang-nhap.html?returnUrl={returnUrl}");
                 }
                 else
                 {
-                    ajaxSuccess = returnUrl == "/" || returnUrl == null
-                                                ? Json(new { status = "success", link = "/" })
-                                                : Json(new { status = "success", link = returnUrl });
-                }
-                //update LastLogin
-                kh.LastLogin = DateTime.Now;
-                _context.Customers.Update(kh);
-                _context.SaveChanges();
-                // Lưu session 
-                // Settring Default
-                HttpContext.Session.SetString("KhachHang_Ma", kh.CustomerId);
-                // Identity
-                var USERCLAIM = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, kh.FullName),
-                    new Claim("CustomerID", kh.CustomerId.ToString()),
-                    new Claim(ClaimTypes.Role, kh.Role.RoleName),
-                };
-                ClaimsIdentity grandmaIdentity = new ClaimsIdentity(USERCLAIM, CookieAuthenticationDefaults.AuthenticationScheme);
-                await HttpContext.SignInAsync(new ClaimsPrincipal(grandmaIdentity));
+                    //update LastLogin
+                    kh.LastLogin = DateTime.Now;
+                    _context.Customers.Update(kh);
+                    _context.SaveChanges();
+                    // Lưu session 
+                    // Settring Default
+                    HttpContext.Session.SetString("KhachHang_Ma", kh.CustomerId);
+                    // Identity
+                    var USERCLAIM = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, kh.FullName),
+                        new Claim("CustomerID", kh.CustomerId.ToString()),
+                        new Claim(ClaimTypes.Role, kh.Role.RoleName),
+                    };
+                    ClaimsIdentity grandmaIdentity = new ClaimsIdentity(USERCLAIM, CookieAuthenticationDefaults.AuthenticationScheme);
+                    await HttpContext.SignInAsync(new ClaimsPrincipal(grandmaIdentity));
 
-                _notifyService.Success("Bạn đã đăng nhập thành công");
-                return ajaxSuccess;
+                    _notifyService.Success("Bạn đã nhập thông tin đúng");
+                    return LocalRedirect(returnUrl);
+                }
             }
             catch
             {
-                var ajaxSuccess = returnUrl == "/" || returnUrl == "" ? Json(new { status = "success", link = $"/dang-nhap.html" })
-                                : Json(new { status = "success", link = $"/dang-nhap.html?returnUrl={returnUrl}" });
-                return ajaxSuccess;
+                return RedirectToAction("Index", "Home");
             }
-        }
-        [Route("/dntb.html")]
-        public IActionResult Fail()
-        {
-            _notifyService.Warning("Bạn đã nhập thông tin sai");
-            return RedirectToAction("Login","Accounts");
         }
         [HttpGet]
         [Route("/dang-xuat.html")]

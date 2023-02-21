@@ -26,11 +26,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 pt-5">
-                        <button onclick="getURL1()" class="btn btn-custom-size lg-size btn-secondary btn-primary-hover rounded-0">LogIn</button>
-                    </div>
-                    <div class="col-md-6 pt-5">
+                    <div class="mt-3 d-flex justify-content-between">
                         <a class="btn btn-custom-size lg-size btn-secondary btn-primary-hover rounded-0 ml-auto" asp-action="Index" asp-controller="Home" asp-area="">Back to Home</a>
+                        <input type="submit" value="Login" class="btn btn-custom-size lg-size btn-secondary btn-primary-hover rounded-0" />
                     </div>
                 </form>
             </div>
@@ -46,37 +44,6 @@
     <script>
         $(document).ready(function () {
             $.validator.unobtrusive.parse($("#form"));
-        })
-        function getURL1() {
-            if ($("#form").valid()) {
-                let url = window.location.href;
-                //alert(url);
-                let z = url.split('=')[1];
-                //alert(z);
-                let formData = $("#form").serialize();
-                //alert(formData);
-                $.ajax({
-                    url: "/dang-nhap.html",
-                    type: "Post",
-                    data:
-                    {
-                        returnUrl: z,
-                        dangnhap: { UserName: UserName.value, Password: Password.value },
-                    },
-                    datatype: "json",
-                    success: function (results) {
-                        if (results.status == "success") {
-                            window.location.href = results.link ;
-                        }
-                        else {
-                            window.location.href = "dntb.html";
-                        }
-                    },
-                    error: function (xhr) {
-                        alert('error');
-                    }
-                });
-            }
-        }
+        });
     </script>
 }
