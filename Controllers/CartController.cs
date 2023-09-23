@@ -31,7 +31,7 @@ namespace e_commerce_web.Controllers
             get
             {
                 ListCartItemVM gh = new();
-                gh = HttpContext.Session.Get<ListCartItemVM>("GioHang");
+                gh = HttpContext.Session.Gets<ListCartItemVM>("GioHang");
                 if (gh == null)
                 {
                     gh = new ();
@@ -65,7 +65,7 @@ namespace e_commerce_web.Controllers
                 _notifyService.Warning("Sản Phẩm ko tồn tại");
                 return RedirectToAction("Index", "Cart");
             }
-            HttpContext.Session.Set("GioHang", listcartVM);
+            HttpContext.Session.Sets("GioHang", listcartVM);
             _notifyService.Success("Sản Phẩm thêm vào giỏ hàng thành công");
             return Json(new { status = "success" });
         }
@@ -78,7 +78,7 @@ namespace e_commerce_web.Controllers
                 _notifyService.Warning("Sản Phẩm ko tồn tại");
                 return RedirectToAction("Index", "Cart");
             }
-            HttpContext.Session.Set("GioHang", listcartVM);
+            HttpContext.Session.Sets("GioHang", listcartVM);
             return Json(new { status = "success" });
         }
         public IActionResult RemoveCartItem(int ProductID, int? ammount)
@@ -88,10 +88,10 @@ namespace e_commerce_web.Controllers
             if (listcartVM.ListCart.Count == 0 && listcartVM.TongTien == 0 )
             {
                 _notifyService.Warning("Giỏ hàng rỗng");
-                HttpContext.Session.Set("GioHang", listcartVM);
+                HttpContext.Session.Sets("GioHang", listcartVM);
                 return Json(new { status = "success" });
             }
-            HttpContext.Session.Set("GioHang", listcartVM);
+            HttpContext.Session.Sets("GioHang", listcartVM);
             _notifyService.Success("Remove 1 sản phẩm thành công");
             return Json(new { status = "success" });
         }

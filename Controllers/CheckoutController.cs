@@ -30,7 +30,7 @@ namespace e_commerce_web.Controllers
             get
             {
                 ListCartItemVM gh = new();
-                gh = HttpContext.Session.Get<ListCartItemVM>("GioHang");
+                gh = HttpContext.Session.Gets<ListCartItemVM>("GioHang");
                 if (gh == null)
                 {
                     gh = new();
@@ -42,7 +42,7 @@ namespace e_commerce_web.Controllers
         public IActionResult Index()
         {
             //Lay gio hang ra de xu ly
-            var cart = HttpContext.Session.Get<ListCartItemVM>("GioHang");
+            var cart = HttpContext.Session.Gets<ListCartItemVM>("GioHang");
             var taikhoanID = HttpContext.Session.GetString("KhachHang_Ma");
             ThanhToanVM checkout = new ThanhToanVM();
             if (taikhoanID == null) return RedirectToAction("Index", "Home");
@@ -65,7 +65,7 @@ namespace e_commerce_web.Controllers
         public IActionResult Index(ThanhToanVM checkout)
         {
             //Lay gio hang ra de xu ly
-            var cart = HttpContext.Session.Get<ListCartItemVM>("GioHang");
+            var cart = HttpContext.Session.Gets<ListCartItemVM>("GioHang");
             var taikhoanID = HttpContext.Session.GetString("KhachHang_Ma");
             Order order = new()
             {
@@ -75,9 +75,6 @@ namespace e_commerce_web.Controllers
                 Address = checkout.cus.Address,
                 TransactStatusId = 1 ,
             };
-            _context.Orders.Add(order);
-            _context.SaveChanges();
-
             foreach (var item in cart.ListCart)
             {
                 OrderDetail orderDetail = new()
@@ -88,8 +85,9 @@ namespace e_commerce_web.Controllers
                     TotalMoney = item.Tien,
                     CreateDate = DateTime.Now,
                 };
-                _context.OrderDetails.Add(orderDetail);
+                order.OrderDetails.Add(orderDetail);
             }
+            _context.Orders.Add(order);
             _context.SaveChanges();
             HttpContext.Session.Remove("GioHang");
             return View("ThankYou");

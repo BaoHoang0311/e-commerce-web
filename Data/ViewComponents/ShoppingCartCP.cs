@@ -14,7 +14,7 @@ namespace e_commerce_web.Data.ViewComponents
         // số ở giỏ hàng
         public IViewComponentResult Invoke()
         {
-            var item = HttpContext.Session.Get<ListCartItemVM>("GioHang");
+            var item = HttpContext.Session.Gets<ListCartItemVM>("GioHang");
             if (item != null) return View(item.ListCart.Count);
             return View(0);
         }

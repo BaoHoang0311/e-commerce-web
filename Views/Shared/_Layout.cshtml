@@ -296,6 +296,7 @@
     <script src="~/Userassets/js/main.js"></script>
     @*jquery autocomplete*@
     <partial name="/Views/Shared/PartialView/Jquery.cshtml" />
+     
     @await RenderSectionAsync("Scripts", required: false)
     @await Component.InvokeAsync("Notyf")
 

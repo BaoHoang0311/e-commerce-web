@@ -12,7 +12,7 @@ namespace e_commerce_web.Data.ViewComponents
     {
         public IViewComponentResult Invoke()
         {
-            var cart = HttpContext.Session.Get<ListCartItemVM>("GioHang");
+            var cart = HttpContext.Session.Gets<ListCartItemVM>("GioHang");
             return View(cart);
         }
     }

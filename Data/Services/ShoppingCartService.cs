@@ -1,9 +1,11 @@
 ﻿using e_commerce_web.Data.ViewModel;
 using e_commerce_web.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 
 namespace e_commerce_web.Data.Services
 {
@@ -29,7 +31,6 @@ namespace e_commerce_web.Data.Services
 
             Product product = new();
             product = _context.Products.FirstOrDefault(p => p.ProductId == ProductID);
-
             if (cartitem != null) // có rồi -> cập nhập số lượng
             {
                 // nếu Addcart có số lượng thì thêm + với với lượng hiện tại
